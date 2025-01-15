@@ -1,0 +1,258 @@
+@font-face {
+  font-family: 'SourceHanSansCN-Bold';
+  src: url('/font/SourceHanSansCN-Bold.otf');
+}
+
+@font-face {
+  font-family: 'SourceHanSansCN-Medium';
+  src: url('/font/SourceHanSansCN-Medium.otf');
+}
+
+@font-face {
+  font-family: 'SourceHanSansCN-Regular';
+  src: url('/font/SourceHanSansCN-Regular.otf');
+}
+
+@font-face {
+  font-family: 'UBTECH-Bold';
+  src: url('/font/UBTECH-Bold.otf');
+}
+
+@font-face {
+  font-family: 'UBTECH-Light';
+  src: url('/font/UBTECH-Light.otf');
+}
+
+@font-face {
+  font-family: 'UBTECH-Regular';
+  src: url('/font/UBTECH-Regular.otf');
+}
+
+HTML,
+body,
+div,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+ol,
+dl,
+li,
+dt,
+dd,
+p,
+blockquote,
+pre,
+form,
+fieldset,
+table,
+th,
+td {
+  border: none;
+  font-family: '微软雅黑', '黑体', '宋体';
+
+  font-size: 14px;
+  // color: #333333;
+  font-family: 'UBTECH-Regular', 'SourceHanSansCN-Regular', '思源黑体',
+    'Microsoft YaHei', '微软雅黑', 'webfont', 'Hiragino Sans GB', Arial,
+    Helvetica, 'Microsoft YaHei New', 'STXihei', '华文细黑', sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+strong,
+th,
+var {
+  font-style: normal;
+  font-weight: normal;
+}
+a {
+  text-decoration: none;
+  color: #fff;
+}
+a:link {
+  color: #fff;
+}
+a:visited {
+  color: #fff;
+}
+a:hover {
+  color: #00a5e5;
+}
+a:active {
+  color: #fff;
+}
+input::-ms-clear {
+  display: none;
+}
+input::-ms-reveal {
+  display: none;
+}
+input {
+  -webkit-appearance: none;
+  margin: 0;
+  outline: none;
+  padding: 0;
+}
+input::-webkit-input-placeholder {
+  color: #ccc;
+}
+input::-ms-input-placeholder {
+  color: #ccc;
+}
+input::-moz-placeholder {
+  color: #ccc;
+}
+input[type='submit'],
+input[type='button'] {
+  cursor: pointer;
+}
+button[disabled],
+input[disabled] {
+  cursor: default;
+}
+img {
+  border: none;
+}
+ul,
+ol,
+li {
+  list-style-type: none;
+}
+/*公共方法*/
+.clear {
+  clear: both;
+}
+.clearleft {
+  clear: left;
+}
+.clearright {
+  clear: right;
+}
+.floatleft {
+  float: left;
+}
+.floatright {
+  float: right;
+}
+.cursor {
+  cursor: pointer;
+}
+/*背景及色值表*/
+.bg000 {
+  background: #000;
+}
+.color000 {
+  color: #000;
+}
+
+.container_cont {
+  width: 1440px;
+  margin: 0 auto;
+}
+.banner_cont {
+  position: relative;
+  padding-top: 109px;
+  .bannerIndex {
+    height: 634px;
+    right: 84px;
+    position: absolute;
+    top: 0;
+  }
+  .bannerText {
+    margin-left: 84px;
+  }
+}
+.sec_bg_gray {
+  background: #f5f6fb;
+}
+.sec_bg_white {
+  background: #ffffff;
+}
+.sec_title {
+  h1 {
+    font-size: 32px;
+    font-weight: 500;
+    color: #201c38;
+    text-align: center;
+    margin-bottom: 64px;
+  }
+}
+.sec_padding {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+.cont_padding {
+  padding: 60px 40px;
+}
+
+.no_mag_2 {
+  &:nth-child(2n) {
+    margin-right: 0 !important;
+  }
+}
+// common loading
+
+.fresh_roll_wrap {
+  line-height: 14px;
+  color: #5f5d71;
+  .icon_fresh {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    vertical-align: text-top;
+    background: url(~@/assets/images/capacity/extremity/multiface/icon-loading.png)
+      no-repeat center/cover;
+    animation: rotateImg 1s infinite linear;
+  }
+}
+
+.bodered {
+  border: 1px solid #e0e0e3;
+}
+.bodered_top {
+  border-top: 1px solid #e0e0e3;
+}
+.bodered_right {
+  border-right: 1px solid #e0e0e3;
+}
+.bodered_bottom {
+  border-bottom: 1px solid #e0e0e3;
+}
+.bodered_left {
+  border-left: 1px solid #e0e0e3;
+}
+
+.ant-btn-primary {
+  background: #00a5e5;
+  border-color: #00a5e5;
+  border-radius: 4px;
+}
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background: #00a5e5;
+  border-color: #00a5e5;
+  opacity: 0.7;
+}
+
+@keyframes rotateImg {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
