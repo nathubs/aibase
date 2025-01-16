@@ -6,60 +6,19 @@ import google from "@/assets/images/home/google.svg";
 import googleBanner from "@/assets/images/home/google.png";
 import aitech_more from "@/assets/images/home/aitechnology_more_icon.png";
 import aipaas from "@/assets/images/home/aipaas_watermark_pic_a.png";
-
+import { getApps } from '@/service/llmService';
+import { useEffect, useState } from "react";
 export default function IndexPage() {
   // const chat = new uChat({ userId: 'bingkui.wu', apiEnv: 'prod' });
+  /** 大模型应用列表 */
+  const [llmApps, setLlmApps] = useState<any[]>([]);
 
-  const contentList = [
-    {
-      banner: googleBanner,
-      icon: google,
-      title: "AI 双语字幕&网页沉浸翻译 Trancy 语言学习",
-      desc: "Trancy 不仅提供对 YouTube, Netflix, Udemy, Disney+, TED, edX, Kehan, Coursera 等平台的双语字幕支持，还能实现对普通网页的 AI 划词/划句翻译、全文沉浸翻译等功能，真正的语言学习全能助手。",
-    },
-    {
-      banner: googleBanner,
-      icon: google,
-      title: "AI 双语字幕&网页沉浸翻译 Trancy 语言学习",
-      desc: "Trancy 不仅提供对 YouTube, Netflix, Udemy, Disney+, TED, edX, Kehan, Coursera 等平台的双语字幕支持，还能实现对普通网页的 AI 划词/划句翻译、全文沉浸翻译等功能，真正的语言学习全能助手。",
-    },
-    {
-      banner: googleBanner,
-      icon: google,
-      title: "AI 双语字幕&网页沉浸翻译 Trancy 语言学习",
-      desc: "Trancy 不仅提供对 YouTube, Netflix, Udemy, Disney+, TED, edX, Kehan, Coursera 等平台的双语字幕支持，还能实现对普通网页的 AI 划词/划句翻译、全文沉浸翻译等功能，真正的语言学习全能助手。",
-    },
-    {
-      banner: googleBanner,
-      icon: google,
-      title: "AI 双语字幕&网页沉浸翻译 Trancy 语言学习",
-      desc: "Trancy 不仅提供对 YouTube, Netflix, Udemy, Disney+, TED, edX, Kehan, Coursera 等平台的双语字幕支持，还能实现对普通网页的 AI 划词/划句翻译、全文沉浸翻译等功能，真正的语言学习全能助手。",
-    },
-    {
-      banner: googleBanner,
-      icon: google,
-      title: "AI 双语字幕&网页沉浸翻译 Trancy 语言学习",
-      desc: "Trancy 不仅提供对 YouTube, Netflix, Udemy, Disney+, TED, edX, Kehan, Coursera 等平台的双语字幕支持，还能实现对普通网页的 AI 划词/划句翻译、全文沉浸翻译等功能，真正的语言学习全能助手。",
-    },
-    {
-      banner: googleBanner,
-      icon: google,
-      title: "AI 双语字幕&网页沉浸翻译 Trancy 语言学习",
-      desc: "Trancy 不仅提供对 YouTube, Netflix, Udemy, Disney+, TED, edX, Kehan, Coursera 等平台的双语字幕支持，还能实现对普通网页的 AI 划词/划句翻译、全文沉浸翻译等功能，真正的语言学习全能助手。",
-    },
-    {
-      banner: googleBanner,
-      icon: google,
-      title: "AI 双语字幕&网页沉浸翻译 Trancy 语言学习",
-      desc: "Trancy 不仅提供对 YouTube, Netflix, Udemy, Disney+, TED, edX, Kehan, Coursera 等平台的双语字幕支持，还能实现对普通网页的 AI 划词/划句翻译、全文沉浸翻译等功能，真正的语言学习全能助手。",
-    },
-    {
-      banner: googleBanner,
-      icon: google,
-      title: "AI 双语字幕&网页沉浸翻译 Trancy 语言学习",
-      desc: "Trancy 不仅提供对 YouTube, Netflix, Udemy, Disney+, TED, edX, Kehan, Coursera 等平台的双语字幕支持，还能实现对普通网页的 AI 划词/划句翻译、全文沉浸翻译等功能，真正的语言学习全能助手。",
-    },
-  ];
+
+  useEffect(() => {
+    getApps().then((res) => {
+      setLlmApps(res.data.filter(app => app.icon_url))
+    });
+  }, []);
 
   return (
     <div className={styles.home_wrap}>
@@ -103,15 +62,15 @@ export default function IndexPage() {
             热门应用
           </h1>
           <div className={styles.apply_cont}>
-            {contentList.map((item, index) => (
+            {llmApps.map((app) => (
               <div
                 className={`${styles.apply}`}
-                key={`research_intro_key_${index}`}
+                key={app.id}
               >
-                <img src={item.icon} className={styles.icon} />
+                <img src={app.icon_url} className={styles.icon} />
                 <div className={styles.item_cont_box}>
-                  <div className={styles.title}>{item.title}</div>
-                  <div className={styles.desc}>{item.desc}</div>
+                  <div className={styles.title}>{app.name}</div>
+                  <div className={styles.desc}>{app.description}</div>
                 </div>
                 <div className={styles.bottom}>
                   <i />
