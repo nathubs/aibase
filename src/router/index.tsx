@@ -3,6 +3,7 @@ import Home from "../pages/home";
 import { LayoutFull } from "../layout";
 import FaceCheck from "@/pages/open/faceCheck";
 import WebCam from "@/pages/open/webCam";
+import Chat from "@/pages/chat";
 
 export const routes = [
   {
@@ -22,6 +23,11 @@ export const routes = [
         name: "webCam",
         path: "/open/webCam",
         element: <WebCam />,
+      },
+      {
+        name: "chat",
+        path: "/chat",
+        element: <Chat />,
       },
     ],
   },

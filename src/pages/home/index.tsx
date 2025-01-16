@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import styles from "./index.module.less";
 import banner from "@/assets/images/home/banner@2x.png";
 import bannerText from "@/assets/images/home/banner_text.png";
@@ -9,14 +10,22 @@ import aipaas from "@/assets/images/home/aipaas_watermark_pic_a.png";
 import { getApps } from '@/service/llmService';
 import { useEffect, useState } from "react";
 export default function IndexPage() {
-  // const chat = new uChat({ userId: 'bingkui.wu', apiEnv: 'prod' });
-  /** 大模型应用列表 */
-  const [llmApps, setLlmApps] = useState<any[]>([]);
+  const navigate = useNavigate();
 
+  /** 大模型应用列表 */
+  const [llmApps, setLlmApps] = useState<ChatAPP[]>([]);
+
+  /** 打开大模型应用 */
+  const onOpenChatApp = (app: ChatAPP) => {
+    navigate(`/chat?id=${app.id}&name=${app.name}&mode=${app.mode}`);
+  }
 
   useEffect(() => {
     getApps().then((res) => {
-      setLlmApps(res.data.filter(app => app.icon_url))
+      // 可用的app
+      const usedApps = res.data.filter(app => app.icon_url);
+      console.log('usedApps=', usedApps);
+      setLlmApps(usedApps)
     });
   }, []);
 
@@ -66,6 +75,7 @@ export default function IndexPage() {
               <div
                 className={`${styles.apply}`}
                 key={app.id}
+                onClick={() => onOpenChatApp(app)}
               >
                 <img src={app.icon_url} className={styles.icon} />
                 <div className={styles.item_cont_box}>
