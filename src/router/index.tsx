@@ -2,6 +2,7 @@ import { Navigate, createHashRouter } from "react-router-dom";
 import Home from "../pages/home";
 import { LayoutFull } from "../layout";
 import FaceCheck from "@/pages/open/faceCheck";
+import WebCam from "@/pages/open/webCam";
 
 export const routes = [
   {
@@ -13,9 +14,14 @@ export const routes = [
         element: <Home />,
       },
       {
-        name: "Open",
+        name: "faceCheck",
         path: "/open/faceCheck",
         element: <FaceCheck />,
+      },
+      {
+        name: "webCam",
+        path: "/open/webCam",
+        element: <WebCam />,
       },
     ],
   },

@@ -106,7 +106,7 @@ export  const menuData = [
         category: [
           {
             name: '手势识别',
-            path: '/openTech/webCam',
+            path: '/open/webCam',
           },
           {
             name: '人体关键点分析',
