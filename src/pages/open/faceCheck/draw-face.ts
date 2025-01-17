@@ -123,6 +123,7 @@ export function drawObjSquare(
   data: any[],
   rectSize: any[],
   scale: number,
+  newScale: number,
   key = "position"
 ) {
   console.log("data==", data, rectSize, scale);

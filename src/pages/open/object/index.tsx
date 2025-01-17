@@ -1,17 +1,16 @@
 import styles from "./index.module.less";
 import "./demo.less";
 import { Button } from "antd";
-import { drawSquare, getImageUrlToBase64 } from "./draw-face";
-import { imgFile } from "./default-img";
+import { imgFile } from "./defaultImg";
 import { useState, useEffect } from "react";
 import ReactJson from "react-json-view";
 import httpService from "@/service/httpService";
-import bg from "@/assets/images/home/ai_pic_bg.png";
+import { drawObjSquare, getImageUrlToBase64 } from "../faceCheck/draw-face";
 import Banner from "../component/banner";
 import ApplyList from "../component/applyList";
 import Special from "../component/special";
 
-export default function FaceCheck() {
+export default function Object() {
   const [selectIndex, setSelectIndex] = useState<any>(1);
   const [faceJson, setFaceJson] = useState<any>({});
   let scale = 0.5859375;
@@ -36,11 +35,16 @@ export default function FaceCheck() {
     formData.append("groupID", "demov6");
     formData.append("extra", "landmarks");
     httpService
-      .imgPost("/v1/faceRecognition/detectFaces", formData)
+      .imgPost("/v1/objectDetection/process", formData)
       .then((res: any) => {
         if (res.data.code === 0) {
           setFaceJson(res.data);
-          drawSquare(res.data.data.areas, rectSize, scale * painScale, scaleY);
+          drawObjSquare(
+            res.data.data.result,
+            rectSize,
+            scale * painScale,
+            scaleY
+          );
         }
       })
       .catch((err: any) => {
@@ -55,10 +59,12 @@ export default function FaceCheck() {
     const img = new Image(); //img 可以 new 也可以来源于我们页面的img标签
     img.src = url; // 设置图片源地址
 
-    img.onload = function () {
+    img.onload = function (res) {
       scale = canvas.width / img.width;
       scaleY = canvas.height / img.height;
+      let imgWigth = canvas.width;
       let imgHeight = canvas.height;
+      imgWigth = scale * img.width;
       imgHeight = scaleY * img.height;
       // 图片自适应高度缩放的宽高比
       let painWidth = (img.width / img.height) * imgHeight;
@@ -94,10 +100,8 @@ export default function FaceCheck() {
   return (
     <div className="layout">
       <Banner
-        type="faceCheck"
-        demoMove={() => {
-          document.getElementById("demo")?.scrollIntoView();
-        }}
+        type="object"
+        demoMove={() => document.getElementById("demo")?.scrollIntoView()}
       />
       <div className="feature-wrapper" id="demo">
         <h2>功能体验</h2>
@@ -162,8 +166,8 @@ export default function FaceCheck() {
           </div>
         </div>
       </div>
-      <ApplyList type="faceCheck" />
-      <Special type="faceCheck" />
+      <ApplyList type="object" />
+      <Special type="object" />
     </div>
   );
 }

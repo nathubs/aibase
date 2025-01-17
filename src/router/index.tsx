@@ -1,9 +1,7 @@
 import { Navigate, createHashRouter } from "react-router-dom";
-import Home from "../pages/home";
 import { LayoutFull } from "../layout";
-import FaceCheck from "@/pages/open/faceCheck";
-import WebCam from "@/pages/open/webCam";
-import Chat from "@/pages/chat";
+import { lazyLoad } from "./lazy-load";
+import { lazy } from "react";
 
 export const routes = [
   {
@@ -12,28 +10,58 @@ export const routes = [
       {
         name: "Home",
         path: "/home",
-        element: <Home />,
+        element: lazyLoad(lazy(() => import("../pages/home"))),
       },
       {
         name: "faceCheck",
         path: "/open/faceCheck",
-        element: <FaceCheck />,
+        element: lazyLoad(lazy(() => import("../pages/open/faceCheck"))),
       },
       {
         name: "webCam",
         path: "/open/webCam",
-        element: <WebCam />,
+        element: lazyLoad(lazy(() => import("../pages/open/webCam"))),
+      },
+      {
+        name: "draw",
+        path: "/open/draw",
+        element: lazyLoad(lazy(() => import("../pages/open/draw"))),
+      },
+      {
+        name: "lpr",
+        path: "/open/lpr",
+        element: lazyLoad(lazy(() => import("../pages/open/lpr"))),
+      },
+      {
+        name: "object",
+        path: "/open/object",
+        element: lazyLoad(lazy(() => import("../pages/open/object"))),
+      },
+      {
+        name: "intro",
+        path: "/open/intro/:type",
+        element: lazyLoad(lazy(() => import("../pages/open/intro"))),
+      },
+      {
+        name: "utr",
+        path: "/open/utr",
+        element: lazyLoad(lazy(() => import("../pages/open/utr"))),
+      },
+      {
+        name: "tts",
+        path: "/open/tts",
+        element: lazyLoad(lazy(() => import("../pages/open/tts"))),
       },
       {
         name: "chat",
         path: "/chat",
-        element: <Chat />,
+        element: lazyLoad(lazy(() => import("../pages/chat"))),
       },
     ],
   },
   {
-    path: '*',
-    element: <Navigate to="/home" />, 
+    path: "*",
+    element: <Navigate to="/home" />,
   },
 ];
 

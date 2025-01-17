@@ -12,6 +12,9 @@ import {
 import { LeftVideo } from "./left-video";
 import { ShowJson } from "./left-video/VideoGesture";
 import { getImageUrlToBase64 } from "../faceCheck/draw-face";
+import Banner from "../component/banner";
+import ApplyList from "../component/applyList";
+import Special from "../component/special";
 let gestureRecognizer: any;
 
 export default function WebCam() {
@@ -149,25 +152,15 @@ export default function WebCam() {
   }, []);
 
   return (
-    <>
-      <div
-        className={styles.techBanner}
-        style={{
-          backgroundImage: `url(${require("../../../assets/images/home/ai_pic_bg.png")})`,
+    <div className="layout">
+      <Banner
+        type="webCam"
+        demoMove={() => {
+          document.getElementById("demo")?.scrollIntoView();
         }}
-      >
-        <div className={styles.title}>手势识别</div>
-        <div className={styles.desc}>
-          通过捕捉和解析人类手势，实现人机交互的技术。它依赖于图像处理、计算机视觉和深度学习技术，能够识别和区分不同的手势动作.
-        </div>
-        <div>
-          <Button className={styles.demo}>Demo体验</Button>
-          <Button className={styles.document}>技术文档</Button>
-        </div>
-      </div>
-      <div className="feature-wrapper">
+      />
+      <div className="feature-wrapper" id="demo">
         <h2>功能体验</h2>
-
         <div className="demo-wrapper">
           <Tabs
             activeKey={type}
@@ -246,6 +239,8 @@ export default function WebCam() {
           </div>
         </div>
       </div>
-    </>
+      <ApplyList type="webCam" />
+      <Special type="webCam" />
+    </div>
   );
 }

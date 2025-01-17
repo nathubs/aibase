@@ -103,7 +103,10 @@ const HeaderLayout: FC = () => {
                             className={styles.third}
                             key={thirdCate.name}
                             onClick={() => {
-                              router.navigate(thirdCate.path);
+                              router.navigate(
+                                thirdCate.path ??
+                                  `/open/intro/${thirdCate.type}`
+                              );
                             }}
                           >
                             {thirdCate.name}
