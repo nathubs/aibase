@@ -1,4 +1,3 @@
-import styles from "./index.module.less";
 import "./demo.less";
 import { Button } from "antd";
 import { imgFile } from "./defaultImg";
@@ -59,12 +58,10 @@ export default function Object() {
     const img = new Image(); //img 可以 new 也可以来源于我们页面的img标签
     img.src = url; // 设置图片源地址
 
-    img.onload = function (res) {
+    img.onload = function () {
       scale = canvas.width / img.width;
       scaleY = canvas.height / img.height;
-      let imgWigth = canvas.width;
       let imgHeight = canvas.height;
-      imgWigth = scale * img.width;
       imgHeight = scaleY * img.height;
       // 图片自适应高度缩放的宽高比
       let painWidth = (img.width / img.height) * imgHeight;

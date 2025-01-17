@@ -1,13 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import styles from "./index.module.less";
 import banner from "@/assets/images/home/banner@2x.png";
 import bannerText from "@/assets/images/home/banner_text.png";
 import bannerTick from "@/assets/images/home/banner_tick.png";
-import google from "@/assets/images/home/google.svg";
-import googleBanner from "@/assets/images/home/google.png";
 import aitech_more from "@/assets/images/home/aitechnology_more_icon.png";
 import aipaas from "@/assets/images/home/aipaas_watermark_pic_a.png";
-import { getApps } from '@/service/llmService';
+import { getApps } from "@/service/llmService";
 import { useEffect, useState } from "react";
 export default function IndexPage() {
   const navigate = useNavigate();
@@ -18,14 +16,14 @@ export default function IndexPage() {
   /** 打开大模型应用 */
   const onOpenChatApp = (app: ChatAPP) => {
     navigate(`/chat?id=${app.id}&name=${app.name}&mode=${app.mode}`);
-  }
+  };
 
   useEffect(() => {
     getApps().then((res) => {
       // 可用的app
-      const usedApps = res.data.filter(app => app.icon_url);
-      console.log('usedApps=', usedApps);
-      setLlmApps(usedApps)
+      const usedApps = res.data.filter((app) => app.icon_url);
+      console.log("usedApps=", usedApps);
+      setLlmApps(usedApps);
     });
   }, []);
 

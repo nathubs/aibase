@@ -1,4 +1,3 @@
-import styles from "./index.module.less";
 import { Button, Tabs } from "antd";
 import "./demo.less";
 import { imgFile } from "./defaultImg";
@@ -36,7 +35,7 @@ export default function WebCam() {
 
     reader.readAsDataURL(file);
     reader.onload = () => {
-      drawImg((reader as any).result, file);
+      drawImg((reader as any).result);
     };
   };
 
@@ -115,7 +114,7 @@ export default function WebCam() {
     }
   };
 
-  const drawImg = (url: string, file: any) => {
+  const drawImg = (url: string) => {
     setCurrentImg(url);
     setTimeout(() => {
       if (currentImgRef && currentImgRef.current) {
@@ -126,8 +125,8 @@ export default function WebCam() {
   const selectImg = (index: number) => {
     setSelectIndex(index);
     const url = imgFile[index].url;
-    getImageUrlToBase64(url).then((res: any) => {
-      drawImg(url, res.file);
+    getImageUrlToBase64(url).then(() => {
+      drawImg(url);
     });
   };
 

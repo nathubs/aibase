@@ -126,7 +126,7 @@ export function drawObjSquare(
   newScale: number,
   key = "position"
 ) {
-  console.log("data==", data, rectSize, scale);
+  console.log("data==", data, rectSize, scale, newScale);
   //获得canvas画布
   var canvas = document.getElementById("myCanvas");
   //得到画布的上下文

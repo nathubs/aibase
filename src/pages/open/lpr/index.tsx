@@ -1,6 +1,5 @@
-import styles from "./index.module.less";
 import "./demo.less";
-import { App, Button } from "antd";
+import { Button } from "antd";
 import { imgFile } from "./defaultCarImg";
 import { useState, useEffect } from "react";
 import ReactJson from "react-json-view";
@@ -58,7 +57,7 @@ export default function Lpr() {
     var img = new Image(); //img 可以 new 也可以来源于我们页面的img标签
     img.src = url; // 设置图片源地址
 
-    img.onload = function (res) {
+    img.onload = function () {
       let imgWigth = (canvas as any).width;
       let imgHeight = (canvas as any).height;
       // 画布缩放的比例

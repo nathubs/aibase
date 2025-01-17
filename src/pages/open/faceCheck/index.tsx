@@ -1,4 +1,3 @@
-import styles from "./index.module.less";
 import "./demo.less";
 import { Button } from "antd";
 import { drawSquare, getImageUrlToBase64 } from "./draw-face";
@@ -6,7 +5,6 @@ import { imgFile } from "./default-img";
 import { useState, useEffect } from "react";
 import ReactJson from "react-json-view";
 import httpService from "@/service/httpService";
-import bg from "@/assets/images/home/ai_pic_bg.png";
 import Banner from "../component/banner";
 import ApplyList from "../component/applyList";
 import Special from "../component/special";

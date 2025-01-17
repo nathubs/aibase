@@ -166,7 +166,7 @@ export const menuData = [
           },
           {
             name: "AI作画",
-            path: "open/draw",
+            path: "/open/draw",
           },
           {
             name: "图生图",
