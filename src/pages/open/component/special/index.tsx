@@ -25,7 +25,7 @@ const Special = ({ type }: { type: string }) => {
       <h2 className="common-module-tit">特色优势</h2>
       <div className={styles.special}>
         {list.map((item: IItem) => (
-          <div className={styles.item}>
+          <div className={styles.item} key={item.title}>
             <div className={styles.title}>{item.title}</div>
             <div className={styles.desc}>{item.desc}</div>
           </div>

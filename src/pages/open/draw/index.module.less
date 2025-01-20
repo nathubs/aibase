@@ -1,0 +1,35 @@
+.main{
+  padding: 20px 20px;
+  border: 1px solid #dbdbdb;
+  display: flex;
+  background-color: rgba(255,255,255,0.8);
+  border-radius: 8px;
+  gap: 20px;
+}
+.left{
+  border: 1px solid #dbdbdb;
+  flex: 1;
+  .tools{
+    background-color: azure;
+  }
+  canvas{
+    // height: 500px;
+    // width: 650px;
+    cursor: var(--canvas-pointer);
+  }
+}
+
+.tools{
+  display: flex;
+  padding: 10px 20px;
+  gap: 10px;
+  .slider{
+    width: 150px;;
+  }
+}
+
+.right {
+  flex:1;
+  .img{
+  }
+}
