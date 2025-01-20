@@ -7,33 +7,26 @@ import InputForm from "./components/InputForm";
 import { useSearchParams } from 'react-router-dom';
 import { getAccessToken } from "@/service/llmService";
 import './index.less';
+import { barAvatar, ChatBotMode, ChatMessage, fooAvatar } from "./utils/types";
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-
-const fooAvatar: React.CSSProperties = {
-    color: '#f56a00',
-    backgroundColor: '#fde3cf',
-};
-
-const barAvatar: React.CSSProperties = {
-    color: '#fff',
-    backgroundColor: '#87d068',
-};
-
-
-interface ChatMessage {
-    id: string;
-    content: string;
-    type: 'text' | 'image' | 'video' | 'audio' | 'document' | 'link' | 'file';
-    sender: 'user' | 'bot';
-    feedback?: {
-        rating: 'like' | 'dislike';
-    };
+const getApiUrl = (mode?: ChatBotMode) => {
+    switch (mode) {
+        case 'workflow':
+            return 'https://llm.nangua203.com/v1/workflows/run';
+        case 'completion':
+            return 'https://llm.nangua203.com/v1/completion-messages';
+        default:
+            return 'https://llm.nangua203.com/v1/chat-messages';
+    }
 }
 
 const CommonPage = () => {
     const [searchParams] = useSearchParams();
     const appId = searchParams.get('id');
     const appName = searchParams.get('name');
+    const mode = searchParams.get('mode') as ChatBotMode;
     /** 当前query内容 */
     const [value, setValue] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -121,7 +114,7 @@ const CommonPage = () => {
         conversation?.setUserInputValues(inputs);
     }
 
-    /** 点击回话建议 */
+    /** 点击会话建议 */
     const onSuggest = (question: string) => {
         onSend(question);
     }
@@ -131,7 +124,7 @@ const CommonPage = () => {
         const chat = new uChat({
             apiEnv: 'dev',
             userId: 'test',
-            // apiUrl: 'https://llm.nangua203.com/v1/chat-messages',
+            apiUrl: getApiUrl(mode),
             getHeader: () => {
                 return {
                     'Authorization': `Bearer ${accessToken}`
@@ -169,11 +162,11 @@ const CommonPage = () => {
     return (
         <div className='container'>
             {
-                !userInputValues && userInputForm.length > 0 && <InputForm userFromInput={userInputForm} onSubmit={onUserInputFormSubmit} />
+                !userInputValues && userInputForm.length > 0 && <InputForm className="chat" userFromInput={userInputForm} onSubmit={onUserInputFormSubmit} />
             }
 
             {
-                userInputValues && <div>
+                userInputValues && <div className="chat">
                     <Welcome
                         icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
                         title={appName}
@@ -192,7 +185,7 @@ const CommonPage = () => {
                                 chatMessages.map(message => <Bubble
                                     placement={message.sender === 'bot' ? 'start' : 'end'}
                                     key={message.id}
-                                    content={message.content}
+                                    content={message.sender === 'bot' ? <Markdown remarkPlugins={[remarkGfm]}>{message.content}</Markdown> : message.content}
                                     avatar={{ icon: <UserOutlined />, style: message.sender === 'bot' ? fooAvatar : barAvatar }}
                                 />)
                             }
