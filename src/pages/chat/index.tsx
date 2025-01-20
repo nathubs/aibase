@@ -1,7 +1,7 @@
-import { Sender, Bubble, Attachments, Welcome } from "@ant-design/x";
-import { Flex, message, Button, Space } from 'antd';
+import { Sender, Bubble, Welcome } from "@ant-design/x";
+import { Flex, Button, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { UserOutlined, CloudUploadOutlined, LinkOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import { uChat, BusinessType, Conversation, UserFormInputType, UserFormInputCategory } from '@ubt/uchat';
 import InputForm from "./components/InputForm";
 import { useSearchParams } from 'react-router-dom';
@@ -44,6 +44,7 @@ const CommonPage = () => {
     /** 默认建议 */
     const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([]);
 
+    /** 聊天发送 */
     const onSend = (query: string) => {
         if (loading) {
             return false;
@@ -63,9 +64,7 @@ const CommonPage = () => {
                 setLoading(true);
             },
             onProgress(text) {
-                console.log('text', text);
                 setChatMessages((prev) => {
-                    console.log(prev)
                     const last = prev[prev.length - 1];
                     if (last.sender === 'bot') {
                         last.content = text;
@@ -94,13 +93,10 @@ const CommonPage = () => {
                 })
                 setLoading(false);
             },
-            onFinish(message) {
-                console.log('onFinish=', message)
+            onFinish() {
                 setLoading(false);
             },
         })
-
-        // message.info('Send message!');
     }
 
     const onCancel = () => {
@@ -201,22 +197,6 @@ const CommonPage = () => {
                                 }}
                                 onSubmit={() => onSend(value)}
                                 onCancel={onCancel}
-                                prefix={
-                                    <Attachments
-                                        beforeUpload={() => false}
-                                        onChange={({ file }) => {
-                                            message.info(`Mock upload: ${file.name}`);
-                                        }}
-                                        getDropContainer={() => divRef.current}
-                                        placeholder={{
-                                            icon: <CloudUploadOutlined />,
-                                            title: 'Drag & Drop files here',
-                                            description: 'Support file type: image, video, audio, document, etc.',
-                                        }}
-                                    >
-                                        <Button type="text" icon={<LinkOutlined />} />
-                                    </Attachments>
-                                }
                             />
                         </Flex>
                     </div>
