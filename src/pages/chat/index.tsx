@@ -1,5 +1,5 @@
 import { Sender, Bubble, Welcome } from "@ant-design/x";
-import { Flex, Button, Space } from 'antd';
+import { Flex, Button, Space, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { UserOutlined } from '@ant-design/icons';
 import { uChat, BusinessType, Conversation, UserFormInputType, UserFormInputCategory } from '@ubt/uchat';
@@ -127,6 +127,7 @@ const CommonPage = () => {
                 }
             }
         });
+
         const conversation_ = chat?.newConversation({
             businessType: BusinessType.Common,
             inputs: {}
@@ -143,7 +144,12 @@ const CommonPage = () => {
             if (user_input_form.length === 0) {
                 setUserInputValues({})
             }
+        }, (error) => {
+            message.error(error.message);
         })
+
+
+
 
     }, []);
 

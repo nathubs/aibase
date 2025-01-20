@@ -22,7 +22,6 @@ export default function IndexPage() {
     getApps().then((res) => {
       // 可用的app
       const usedApps = res.data.filter((app) => app.icon_url);
-      console.log("usedApps=", usedApps);
       setLlmApps(usedApps);
     });
   }, []);

@@ -45,7 +45,6 @@ const InputForm = (props: IProps) => {
                 }
             });
             chat.uploadFile(file).then(res => {
-                console.log(res)
                 formRef.current?.setFieldValue('task', {
                     "type": res.mime_type?.split('/')?.[0],
                     "transfer_method": "local_file",
