@@ -1,0 +1,42 @@
+.iframe-container {
+  position: relative;
+  width: 100%; /* 根据需要设置宽度 */
+  flex-grow: 1;
+  // background-image: linear-gradient(0, #1c1c19, transparent);
+}
+
+iframe.landing-iframe {
+  width: 100%;
+  border: none; /* 移除边框 */
+  /* 初始高度设置为0或根据需要 */
+  height: 100vh;
+  transition: height 0.3s ease; /* 平滑过渡高度变化 */
+  margin-bottom: -4px;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8); /* 半透明背景 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* 确保加载效果在iframe之上 */
+}
+
+.loading-icon {
+  font-size: 20px; /* 根据需要调整字体大小 */
+  animation: spin 2s linear infinite;
+}
+
+// @keyframes spin {
+//   from {
+//     transform: rotate(0deg);
+//   }
+//   to {
+//     transform: rotate(360deg);
+//   }
+// }

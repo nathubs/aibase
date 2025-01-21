@@ -1,10 +1,11 @@
-import safeSiteIcon from '@/assets/images/common/safe_label.png';
-import ai from '@/assets/images/home/footer_ai.png';
-import phone from '@/assets/images/home/footer_phone_icon.png';
-import email from '@/assets/images/home/footer_email_icon.png';
-import qrcode from '@/assets/images/home/qrcode.png';
+import safeSiteIcon from "@/assets/images/common/safe_label.png";
+import ai from "@/assets/images/home/footer_ai.png";
+import phone from "@/assets/images/home/footer_phone_icon.png";
+import email from "@/assets/images/home/footer_email_icon.png";
+import qrcode from "@/assets/images/home/qrcode.png";
 
-import styles from './index.module.less';
+import styles from "./index.module.less";
+import { IFramePage, goToIframe } from "@/constants/links";
 
 const FooterLayout: React.FC = () => (
   <div className={styles.footer_wrap}>
@@ -18,7 +19,7 @@ const FooterLayout: React.FC = () => (
               <img src={phone} className={styles.phone} />
               400-6666-700
               <img src={email} className={styles.email} />
-              jiang.jiang@ubtrobot.com
+              ai.guru@ubtrobot.com
             </div>
           </div>
           <img src={qrcode} className={styles.qrcode} />
@@ -28,16 +29,16 @@ const FooterLayout: React.FC = () => (
     <div className={styles.attent_tip_wrap}>
       <div className="container_cont">
         <ul className={styles.cont_list}>
-          <li>©2012-2021 Ubtech Robotics Corp. All Right Reserved</li>
+          <li>©2012-2025 Ubtech Robotics Corp. All rights reserved</li>
           <li>
             <a
-              href="https://www.ubtrobot.com/cn/private-policy"
+              onClick={() => goToIframe(IFramePage.PRIVACYPOLICY)}
               target="_blank"
             >
               隐私政策
             </a>
             &nbsp;&nbsp;
-            <a href="https://www.ubtrobot.com/cn/legal" target="_blank">
+            <a onClick={() => goToIframe(IFramePage.TERM)} target="_blank">
               使用条款
             </a>
           </li>

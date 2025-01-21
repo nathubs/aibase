@@ -62,6 +62,11 @@ export const routes = [
         path: "/aiDrive",
         element: lazyLoad(lazy(() => import("../pages/aiDrive"))),
       },
+      {
+        name: "frame",
+        path: "/home/frame/:name",
+        element: lazyLoad(lazy(() => import("../pages/frame"))),
+      },
     ],
   },
   {
