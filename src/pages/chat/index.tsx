@@ -1,15 +1,18 @@
 import { Sender, Bubble, Welcome } from "@ant-design/x";
 import { Flex, Button, Space, message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { UserOutlined } from '@ant-design/icons';
-import { uChat, BusinessType, Conversation, UserFormInputType, UserFormInputCategory } from '@ubt/uchat';
+import { uChat, BusinessType, Conversation, UserFormInputType, UserFormInputCategory, ChatBotMode } from '@ubt/uchat';
 import InputForm from "./components/InputForm";
 import { useSearchParams } from 'react-router-dom';
 import { getAccessToken } from "@/service/llmService";
 import './index.less';
-import { barAvatar, ChatBotMode, ChatMessage, fooAvatar } from "./utils/types";
+import { barAvatar, ChatMessage, fooAvatar } from "./utils/types";
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
+import remarkBreaks from 'remark-breaks';
 
 const getApiUrl = (mode?: ChatBotMode) => {
     switch (mode) {
@@ -43,14 +46,16 @@ const CommonPage = () => {
     const [userInputValues, setUserInputValues] = useState<Record<string, string>>();
     /** 默认建议 */
     const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([]);
-
+    const _loading = useRef(false);
     /** 聊天发送 */
     const onSend = (query: string) => {
-        if (loading) {
+        if (loading || _loading.current) {
             return false;
         }
+        _loading.current = true;
         conversation?.sendMessage(query, {
             onBefore: () => {
+                setLoading(true);
                 setChatMessages((prev) => {
                     prev.push({
                         id: new Date().getTime().toString(),
@@ -58,10 +63,16 @@ const CommonPage = () => {
                         type: 'text',
                         sender: 'user'
                     })
+                    prev.push({
+                        id: new Date().getTime().toString() + 1,
+                        content: '',
+                        type: 'text',
+                        sender: 'bot'
+                    })
                     return prev;
                 })
                 setValue('');
-                setLoading(true);
+
             },
             onProgress(text) {
                 setChatMessages((prev) => {
@@ -83,18 +94,15 @@ const CommonPage = () => {
             onError(err) {
                 console.log('err', err)
                 setChatMessages((prev) => {
-                    prev.push({
-                        id: new Date().getTime().toString(),
-                        content: (err as Error).message,
-                        type: 'text',
-                        sender: 'bot'
-                    })
-                    return JSON.parse(JSON.stringify(prev));
+                    prev[prev.length - 1].content += `[${(err as Error).message}]`;
+                    return prev;
                 })
                 setLoading(false);
+                _loading.current = false;
             },
             onFinish() {
                 setLoading(false);
+                _loading.current = false;
             },
         })
     }
@@ -108,11 +116,32 @@ const CommonPage = () => {
         setUserInputValues(inputs);
         // 保存到对象中
         conversation?.setUserInputValues(inputs);
+        // 如果是非chat-message类app，则直接开始
+        if ((['workflow', 'completion'] as ChatBotMode[]).includes(mode)) {
+            onSend('');
+        }
     }
 
     /** 点击会话建议 */
     const onSuggest = (question: string) => {
         onSend(question);
+    }
+
+    /** 生成对话框 */
+    const genBubble = (message: ChatMessage) => {
+        const isBotMessage = message.sender === 'bot';
+        // 如果发送的是空，则不输出
+        if (!isBotMessage && !message.content) {
+            return null;
+        }
+        return <Bubble
+            placement={message.sender === 'bot' ? 'start' : 'end'}
+            key={message.id}
+            loading={(isBotMessage && !message.content) ? loading : false}
+            content={message.sender === 'bot' ? <Markdown remarkPlugins={[remarkGfm, remarkBreaks]}
+                rehypePlugins={[rehypeHighlight, rehypeRaw]}>{message.content}</Markdown> : message.content}
+            avatar={{ icon: <UserOutlined />, style: message.sender === 'bot' ? fooAvatar : barAvatar }}
+        />
     }
 
     useEffect(() => {
@@ -121,6 +150,7 @@ const CommonPage = () => {
             apiEnv: 'dev',
             userId: 'test',
             apiUrl: getApiUrl(mode),
+            requestTimeout: 20 * 1000,
             getHeader: () => {
                 return {
                     'Authorization': `Bearer ${accessToken}`
@@ -184,12 +214,7 @@ const CommonPage = () => {
                     <div className='chat-conversations'>
                         <Flex gap="middle" vertical>
                             {
-                                chatMessages.map(message => <Bubble
-                                    placement={message.sender === 'bot' ? 'start' : 'end'}
-                                    key={message.id}
-                                    content={message.sender === 'bot' ? <Markdown remarkPlugins={[remarkGfm]}>{message.content}</Markdown> : message.content}
-                                    avatar={{ icon: <UserOutlined />, style: message.sender === 'bot' ? fooAvatar : barAvatar }}
-                                />)
+                                chatMessages.map(message => genBubble(message))
                             }
                         </Flex>
                     </div>

@@ -18,6 +18,3 @@ export interface ChatMessage {
         rating: 'like' | 'dislike';
     };
 }
-
-/** 应用的mode，用于决定调用哪个聊天接口 */
-export type ChatBotMode = 'workflow' | 'chat' | 'agent-chat' | 'completion' | 'advanced-chat' | 'chat'
