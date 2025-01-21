@@ -7,6 +7,15 @@ import aitech_more from "@/assets/images/home/aitechnology_more_icon.png";
 import aipaas from "@/assets/images/home/aipaas_watermark_pic_a.png";
 import { getApps } from "@/service/llmService";
 import { useEffect, useState } from "react";
+import router from "@/router";
+
+const techList = [
+  { title: "人脸和人体技术", url: "/open/faceCheck" },
+  { title: "图像检测", url: "/open/object" },
+  { title: "语音技术", url: "/open/intro/audioTrans" },
+  { title: "自然语音处理", url: "/open/intro/shortSpeech" },
+];
+
 export default function IndexPage() {
   const navigate = useNavigate();
 
@@ -96,62 +105,18 @@ export default function IndexPage() {
             AI技术
           </h1>
           <div className={styles.tech_cont}>
-            <div
-              className={styles.tech}
-              style={
-                {
-                  // backgroundImage: `url(${require("../../assets/images/home/aitechnology_a_pic.png")}, linear-gradient(180deg, #47494a 0%, #2b2b2b 100%))`,
-                }
-              }
-            >
-              <div className={styles.tit}>人脸和人体技术</div>
-              <div className={styles.more}>
-                更多
-                <img src={aitech_more} />
+            {techList.map((item) => (
+              <div
+                className={styles.tech}
+                onClick={() => router.navigate(item.url)}
+              >
+                <div className={styles.tit}>{item.title}</div>
+                <div className={styles.more}>
+                  更多
+                  <img src={aitech_more} />
+                </div>
               </div>
-            </div>
-            <div
-              className={styles.tech}
-              style={
-                {
-                  // backgroundImage: `url(${require("../../assets/images/home/aitechnology_b_pic.png")}, linear-gradient(180deg, #47494a 0%, #2b2b2b 100%))`,
-                }
-              }
-            >
-              <div className={styles.tit}>图像检测</div>
-              <div className={styles.more}>
-                更多
-                <img src={aitech_more} />
-              </div>
-            </div>
-            <div
-              className={styles.tech}
-              style={
-                {
-                  // backgroundImage: `url(${require("../../assets/images/home/aitechnology_c_pic.png")}, linear-gradient(180deg, #47494a 0%, #2b2b2b 100%))`,
-                }
-              }
-            >
-              <div className={styles.tit}>语音技术</div>
-              <div className={styles.more}>
-                更多
-                <img src={aitech_more} />
-              </div>
-            </div>
-            <div
-              className={styles.tech}
-              style={
-                {
-                  // backgroundImage: `url(${require("../../assets/images/home/aitechnology_d_pic.png")}, linear-gradient(180deg, #47494a 0%, #2b2b2b 100%))`,
-                }
-              }
-            >
-              <div className={styles.tit}>自然语音处理</div>
-              <div className={styles.more}>
-                更多
-                <img src={aitech_more} />
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

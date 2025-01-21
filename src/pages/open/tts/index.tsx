@@ -123,7 +123,7 @@ const TTS = () => {
                 setText(e.target.value);
               }}
             />
-            <div className={styles.clear}>
+            <div className={styles.clear} onClick={() => setText("")}>
               <DeleteOutlined />
               清空文本
             </div>

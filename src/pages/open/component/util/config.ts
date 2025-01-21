@@ -31,6 +31,7 @@ export const DESC_MAP: Record<string, any> = {
       "音频增强-增强音频信号，提升音质，使得音频文件更加清晰和动态",
       "音频分割与合并-轻松分割和合并音频片段，为用户提供灵活的音频编辑解决方案",
     ],
+    docUrl: "https://test178.nangua203.com/api/asr.html",
   },
   tts: {
     title: "语音文本在线合成",
@@ -76,6 +77,7 @@ export const DESC_MAP: Record<string, any> = {
       "情感丰富性-使机器语音输出具有喜怒哀乐等情感，提供更自然的交流体验",
       "高效信息传达-情感语音能更有效地传达信息，增强用户理解",
     ],
+    docUrl: "https://test178.nangua203.com/api/tts.html",
   },
   digitalHuman: {
     title: "数字人",
@@ -121,6 +123,7 @@ export const DESC_MAP: Record<string, any> = {
       "多车牌识别-支持识别同一张图片中的多张车牌，针对车牌占比过小情况做专项优化，提升在路侧、监控高拍场景下的识别准确率",
       "夜间车牌识别-支持夜间、弱光场景下的车牌识别，针对复杂光线、车牌反光等情况进行专项优化",
     ],
+    docUrl: "https://test178.nangua203.com/api/lpr.html",
   },
   ocr: {
     title: "OCR自定义模板识别",
@@ -135,6 +138,7 @@ export const DESC_MAP: Record<string, any> = {
       "操作简单-仅需提供1张模板图片，即可在5分钟内完成自定义模板制作，实现对相同版式图片的结构化识别",
       "准确率高-针对各类票据的打印字体和样式、套打偏移情况进行专项优化，识别准确率可达95%",
     ],
+    docUrl: "https://test178.nangua203.com/api/ocr.html",
   },
   object: {
     title: "通用物体识别",
@@ -150,6 +154,7 @@ export const DESC_MAP: Record<string, any> = {
       "快速稳定处理-响应速度快，且在实际商业场景中不断优化升级，实现快速稳定处理",
       "类别覆盖广泛-能够识别超过500种日常生活中的常见物体，类别覆盖范围广泛",
     ],
+    docUrl: "https://test178.nangua203.com/api/object-detection.html",
   },
   ball: {
     title: "小球识别",
@@ -194,6 +199,8 @@ export const DESC_MAP: Record<string, any> = {
       "实时响应-具备高并发、高吞吐、低时延特点，满足实时使用需求",
       "用途广泛-广泛应用于刷脸门禁考勤、人脸签到、人脸支付和人脸登录等众多场景",
     ],
+    docUrl:
+      "https://test178.nangua203.com/api/face.html#%E4%BA%BA%E8%84%B8%E6%A3%80%E6%B5%8B",
   },
   multiBody: {
     title: "多人体检测",
@@ -222,6 +229,8 @@ export const DESC_MAP: Record<string, any> = {
       "服务稳定-提供稳定、精确的大流量服务，支持毫秒级识别响应和高并发承载",
       "高精度识别-提供高精度的识别结果",
     ],
+    docUrl:
+      "https://test178.nangua203.com/api/face.html#%E4%BA%BA%E8%84%B8%E6%AF%94%E5%AF%B9",
   },
   webCam: {
     title: "手势识别",
@@ -277,6 +286,7 @@ export const DESC_MAP: Record<string, any> = {
       "可用性高-在信息充分性、简洁性、连贯性、通顺性等方面经过严格评估",
       "应用灵活-支持用户通过自定义摘要字数来灵活控制摘要长度，满足不同场景需求",
     ],
+    docUrl: "https://test178.nangua203.com/api/predict.html",
   },
   voicePrint: {
     title: "声纹识别",
@@ -292,6 +302,8 @@ export const DESC_MAP: Record<string, any> = {
       "应用灵活-用户无需携带任何硬件设备，只需通过语音即可完成身份验证",
       "适用性强-不受年龄、性别、身体状况等因素影响，适用于各种人群",
     ],
+    docUrl:
+      "https://test178.nangua203.com/api/voice.html#%E5%A3%B0%E7%BA%B9%E8%AF%86%E5%88%AB",
   },
   speechEvaluator: {
     title: "语音评测",
@@ -306,6 +318,8 @@ export const DESC_MAP: Record<string, any> = {
       "丰富场景支持-满足智能评测的各场景需求，包括普通评测和考试题型支持，如口语选择题、情景问答、听选信息、口头作文、看图说话、话题简述、故事复述等",
       "多维度结果输出-支持音素、单词、句子、篇章等多种语音评测模式，支持发音准确度、流利度、完整度、韵律特征等打分维度，支持纠音检测定位发音问题",
     ],
+    docUrl:
+      "https://test178.nangua203.com/api/voice.html#%E8%AF%AD%E9%9F%B3%E8%AF%84%E6%B5%8B",
   },
   literature: {
     title: "文学创作",
@@ -335,6 +349,7 @@ export const DESC_MAP: Record<string, any> = {
       "创意无限-不受人类思维局限，可以创造出许多独特的艺术作品",
       "降低成本-通过AI作画，可以降低对传统艺术家的人力成本",
     ],
+    docUrl: "https://test178.nangua203.com/api/gen_image.html",
   },
   byPaint: {
     title: "图生图",
@@ -346,5 +361,6 @@ export const DESC_MAP: Record<string, any> = {
       "风格多样化-能够模仿多种艺术风格，满足不同用户的审美需求",
       "快速高效-迅速理解并分析用户输入的图像信息，快速生成高质量的艺术作品",
     ],
+    docUrl: "https://test178.nangua203.com/api/gen_image.html",
   },
 };

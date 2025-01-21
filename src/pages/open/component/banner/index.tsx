@@ -25,7 +25,14 @@ const Banner = ({ type, demoMove }: IProps) => {
               Demo体验
             </Button>
           )}
-          {/* <Button className={styles.document}>技术文档</Button> */}
+          {DESC_MAP[type]?.docUrl && (
+            <Button
+              className={styles.document}
+              onClick={() => window.open(DESC_MAP[type]?.docUrl)}
+            >
+              技术文档
+            </Button>
+          )}
         </div>
       </div>
     </div>
