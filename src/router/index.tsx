@@ -57,6 +57,11 @@ export const routes = [
         path: "/chat",
         element: lazyLoad(lazy(() => import("../pages/chat"))),
       },
+      {
+        name: "aiDrive",
+        path: "/aiDrive",
+        element: lazyLoad(lazy(() => import("../pages/aiDrive"))),
+      },
     ],
   },
   {

@@ -10,7 +10,7 @@ const Intro = () => {
     return <></>;
   }
   return (
-    <div className="layout">
+    <div className="layout" key={params.type}>
       <Banner type={params.type} />
       <ApplyList type={params.type} />
       <Special type={params.type} />

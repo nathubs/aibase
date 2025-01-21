@@ -1,9 +1,10 @@
-import { useState, useEffect, FC } from "react";
+import { useState, useEffect, FC, useMemo } from "react";
 import styles from "./index.module.less";
 import logoImg from "@/assets/images/home/logo.png";
 import { menuData } from "./config";
 import router from "@/router";
 import { useLocation } from "react-router-dom";
+import classNames from "classnames";
 
 // 过滤掉无需change headNavBar背景色的route
 const headNavBgFixRoutes = ["/contact/consult"];
@@ -18,9 +19,14 @@ const filterScrollToTopRoutes = [
 const HeaderLayout: FC = () => {
   //通过flag 来控制进度条的显示隐藏
   const [pageScrollNum, setPageScrollNum] = useState<number>(0);
-  const { pathname } = useLocation();
+  const { pathname, ...rest } = useLocation();
 
   const [curMenu, setCurMenu] = useState<any>(menuData[0]);
+
+  const activeIndex = useMemo(() => {
+    const matches = pathname.split("/").filter((item) => item);
+    return ["home", "open", "aiDrive"].findIndex((item) => item === matches[0]);
+  }, [pathname]);
 
   const handleScroll = () => {
     setPageScrollNum(window.pageYOffset);
@@ -67,8 +73,17 @@ const HeaderLayout: FC = () => {
           <img src={logoImg} alt="" onClick={toHome} />
         </div>
         <ul className={styles.menu}>
-          <li onClick={toHome}>首页</li>
-          <li className={styles.openTechMenu}>
+          <li
+            className={classNames({ active: activeIndex === 0 })}
+            onClick={toHome}
+          >
+            首页
+          </li>
+          <li
+            className={classNames(styles.openTechMenu, {
+              active: activeIndex === 1,
+            })}
+          >
             开放能力
             <div className={styles.openTech}>
               <div className={styles.left}>
@@ -120,13 +135,13 @@ const HeaderLayout: FC = () => {
             </div>
           </li>
           <li
+            className={classNames({ active: activeIndex === 2 })}
             onClick={() => {
-              // history.push('/aiDrive');
+              router.navigate("/aiDrive");
             }}
           >
             AI智途
           </li>
-          <li>软硬一体</li>
         </ul>
       </div>
     </div>
