@@ -20,7 +20,8 @@ const InputForm = (props: IProps) => {
     const formRef = useRef<FormInstance>(null);
     const [searchParams] = useSearchParams();
     const appId = searchParams.get('id');
-    const onFinish = (values: any) => {
+
+    const onFinish = (values: Record<string, string>) => {
         // console.log('values=', values)
         onSubmit(values);
     };
