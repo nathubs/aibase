@@ -1,31 +1,6 @@
 @font-face {
-  font-family: 'SourceHanSansCN-Bold';
-  src: url('/font/SourceHanSansCN-Bold.otf');
-}
-
-@font-face {
-  font-family: 'SourceHanSansCN-Medium';
-  src: url('/font/SourceHanSansCN-Medium.otf');
-}
-
-@font-face {
-  font-family: 'SourceHanSansCN-Regular';
-  src: url('/font/SourceHanSansCN-Regular.otf');
-}
-
-@font-face {
-  font-family: 'UBTECH-Bold';
-  src: url('/font/UBTECH-Bold.otf');
-}
-
-@font-face {
-  font-family: 'UBTECH-Light';
-  src: url('/font/UBTECH-Light.otf');
-}
-
-@font-face {
-  font-family: 'UBTECH-Regular';
-  src: url('/font/UBTECH-Regular.otf');
+  font-family: 'Source Han Sans CN';
+  src: url('./assets/font/SourceHanSansCN.woff2') format('woff2');
 }
 
 HTML,
@@ -52,13 +27,20 @@ table,
 th,
 td {
   border: none;
-  font-family: '微软雅黑', '黑体', '宋体';
-
   font-size: 14px;
-  // color: #333333;
-  font-family: 'UBTECH-Regular', 'SourceHanSansCN-Regular', '思源黑体',
-    'Microsoft YaHei', '微软雅黑', 'webfont', 'Hiragino Sans GB', Arial,
-    Helvetica, 'Microsoft YaHei New', 'STXihei', '华文细黑', sans-serif;
+  font-family:
+    'Source Han Sans CN',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif !important;
   margin: 0px;
   padding: 0px;
 }
