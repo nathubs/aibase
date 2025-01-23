@@ -18,6 +18,9 @@ const HeaderLayout: FC = () => {
   }, [pathname]);
 
   const activeOpenName = useMemo(() => {
+    if (activeIndex !== 1) {
+      return "";
+    }
     const matches = pathname.split("/").filter((item) => item);
     const ret = matches?.[matches.length - 1];
     const curIndex = menuData.findIndex((item) =>
@@ -30,7 +33,7 @@ const HeaderLayout: FC = () => {
     }
 
     return ret;
-  }, [pathname]);
+  }, [pathname, activeIndex]);
 
   const handleScroll = () => {
     setPageScrollNum(window.pageYOffset);

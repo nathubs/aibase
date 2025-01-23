@@ -1,5 +1,5 @@
 import "./demo.less";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { drawSquare, getImageUrlToBase64 } from "./draw-face";
 import { imgFile } from "./default-img";
 import { useState, useEffect } from "react";
@@ -18,8 +18,12 @@ export default function FaceCheck() {
   let rectSize: any = [];
 
   const uploadFile = (e: any) => {
-    setSelectIndex(null);
     const file = e.target.files[0] || e.dataTransfer.files[0];
+    if (file.size > 1024 * 1024 * 10) {
+      message.error("图片大小不能超过10M");
+      return;
+    }
+    setSelectIndex(null);
     let reader = new FileReader();
 
     reader.readAsDataURL(file);
@@ -122,7 +126,7 @@ export default function FaceCheck() {
                   <input
                     type="file"
                     onChange={uploadFile}
-                    accept=".jpg,png,.jpeg,.bmp"
+                    accept=".jpg,.png,.jpeg,.bmp"
                   />
                 </Button>
               </div>
