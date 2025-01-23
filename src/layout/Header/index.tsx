@@ -17,8 +17,10 @@ const HeaderLayout: FC = () => {
     return ["home", "open", "aiDrive"].findIndex((item) => item === matches[0]);
   }, [pathname]);
 
+  const isOpen = activeIndex === 1;
+
   const activeOpenName = useMemo(() => {
-    if (activeIndex !== 1) {
+    if (!isOpen) {
       return "";
     }
     const matches = pathname.split("/").filter((item) => item);
@@ -93,7 +95,7 @@ const HeaderLayout: FC = () => {
                   return (
                     <div
                       className={classNames(styles.tit1, {
-                        active: index === firstIndex,
+                        active: index === firstIndex && isOpen,
                       })}
                       key={item.name}
                       onMouseMove={() => {
@@ -119,7 +121,8 @@ const HeaderLayout: FC = () => {
                             className={classNames(styles.third, {
                               active:
                                 activeOpenName === thirdCate.type ||
-                                thirdCate.path?.includes(activeOpenName),
+                                (thirdCate.path?.includes(activeOpenName) &&
+                                  isOpen),
                             })}
                             key={thirdCate.name}
                             onClick={() => {
