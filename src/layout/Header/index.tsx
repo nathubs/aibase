@@ -1,4 +1,4 @@
-import { useState, useEffect, FC, useMemo } from "react";
+import { useState, useEffect, FC, useMemo, act } from "react";
 import styles from "./index.module.less";
 import logoImg from "@/assets/images/home/logo.png";
 import { menuData } from "./config";
@@ -6,26 +6,30 @@ import router from "@/router";
 import { useLocation } from "react-router-dom";
 import classNames from "classnames";
 
-// 过滤掉无需change headNavBar背景色的route
-const headNavBgFixRoutes = ["/contact/consult"];
-// 过滤掉无需回到页面顶部的route
-const filterScrollToTopRoutes = [
-  "/solution/learn/smartlearn/digital",
-  "/solution/learn/smartlearn/pen",
-  "/solution/family/smarthome/sweepmachine",
-  "/solution/nurse/smartaccompany/monitor",
-];
-
 const HeaderLayout: FC = () => {
-  //通过flag 来控制进度条的显示隐藏
   const [pageScrollNum, setPageScrollNum] = useState<number>(0);
-  const { pathname, ...rest } = useLocation();
+  const { pathname } = useLocation();
 
-  const [curMenu, setCurMenu] = useState<any>(menuData[0]);
+  const [firstIndex, setFirstIndex] = useState(0);
 
   const activeIndex = useMemo(() => {
     const matches = pathname.split("/").filter((item) => item);
     return ["home", "open", "aiDrive"].findIndex((item) => item === matches[0]);
+  }, [pathname]);
+
+  const activeOpenName = useMemo(() => {
+    const matches = pathname.split("/").filter((item) => item);
+    const ret = matches?.[matches.length - 1];
+    const curIndex = menuData.findIndex((item) =>
+      item.category.some((v: any) =>
+        v.category.some((n: any) => n.type === ret || n.path?.includes(ret))
+      )
+    );
+    if (curIndex !== firstIndex) {
+      setFirstIndex(curIndex);
+    }
+
+    return ret;
   }, [pathname]);
 
   const handleScroll = () => {
@@ -42,16 +46,10 @@ const HeaderLayout: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (filterScrollToTopRoutes.includes(pathname)) {
-      return;
-    }
     /* 监听路由的变化 */
-    router.subscribe((current) => {
+    router.subscribe(() => {
       /*页面回到顶部 */
-      if (
-        !filterScrollToTopRoutes.includes(current.location.pathname) &&
-        (document.body.scrollTop || document.documentElement.scrollTop > 0)
-      ) {
+      if (document.body.scrollTop || document.documentElement.scrollTop > 0) {
         // 此处的location.pathname 的pathname还是会监听到history，无法获取current，所以无法拦截
         window.scrollTo(0, 0);
       }
@@ -61,11 +59,9 @@ const HeaderLayout: FC = () => {
   return (
     <div
       className={
-        !headNavBgFixRoutes.includes(location.pathname)
-          ? pageScrollNum > 80
-            ? `${styles.head_nav_wrap} ${styles.active} header_active`
-            : `${styles.head_nav_wrap}`
-          : `${styles.head_nav_wrap} head_static_bg`
+        pageScrollNum > 80
+          ? `${styles.head_nav_wrap} ${styles.active} header_active`
+          : `${styles.head_nav_wrap}`
       }
     >
       <div className={styles.home_header}>
@@ -93,10 +89,12 @@ const HeaderLayout: FC = () => {
                 {menuData.map((item: any, index: number) => {
                   return (
                     <div
-                      className={styles.tit1}
+                      className={classNames(styles.tit1, {
+                        active: index === firstIndex,
+                      })}
                       key={item.name}
                       onMouseMove={() => {
-                        setCurMenu(menuData[index]);
+                        setFirstIndex(index);
                       }}
                     >
                       {item.name}
@@ -105,7 +103,7 @@ const HeaderLayout: FC = () => {
                 })}
               </div>
               <div className={styles.right}>
-                {curMenu.category.map((cate: any) => {
+                {menuData[firstIndex].category.map((cate: any) => {
                   return (
                     <div className={styles.item} key={cate.name}>
                       <div className={styles.itemTit}>
@@ -115,7 +113,11 @@ const HeaderLayout: FC = () => {
                       {cate.category.map((thirdCate: any) => {
                         return (
                           <div
-                            className={styles.third}
+                            className={classNames(styles.third, {
+                              active:
+                                activeOpenName === thirdCate.type ||
+                                thirdCate.path?.includes(activeOpenName),
+                            })}
                             key={thirdCate.name}
                             onClick={() => {
                               router.navigate(
