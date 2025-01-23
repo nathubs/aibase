@@ -8,6 +8,8 @@ import aipaas from "@/assets/images/home/aipaas_watermark_pic_a.png";
 import { getApps } from "@/service/llmService";
 import { useEffect, useState } from "react";
 import router from "@/router";
+import { message } from "antd";
+import { Spin } from "@/components/basic/spin";
 
 const techList = [
   { title: "人脸和人体技术", url: "/open/faceCheck" },
@@ -20,7 +22,7 @@ export default function IndexPage() {
   const navigate = useNavigate();
 
   /** 大模型应用列表 */
-  const [llmApps, setLlmApps] = useState<ChatAPP[]>([]);
+  const [llmApps, setLlmApps] = useState<ChatAPP[]>();
 
   /** 打开大模型应用 */
   const onOpenChatApp = (app: ChatAPP) => {
@@ -29,9 +31,11 @@ export default function IndexPage() {
 
   useEffect(() => {
     getApps().then((res) => {
-      // 可用的app
-      const usedApps = res.data.filter((app) => app.icon_url);
+      // 过滤出热门的应用
+      const usedApps = res.data.filter((app) => app.tags.find(m => m.name === "热门应用"));
       setLlmApps(usedApps);
+    }, () => {
+      message.error("服务超时，请刷新重试！");
     });
   }, []);
 
@@ -77,7 +81,8 @@ export default function IndexPage() {
             热门应用
           </h1>
           <div className={styles.apply_cont}>
-            {llmApps.map((app) => (
+            <Spin spinning={!llmApps} />
+            {llmApps?.map((app) => (
               <div
                 className={`${styles.apply}`}
                 key={app.id}
@@ -86,7 +91,7 @@ export default function IndexPage() {
                 <img src={app.icon_url} className={styles.icon} />
                 <div className={styles.item_cont_box}>
                   <div className={styles.title}>{app.name}</div>
-                  <div className={styles.desc}>{app.description}</div>
+                  <div className={styles.desc} title={app.description}>{app.description}</div>
                 </div>
                 <div className={styles.bottom}>
                   <i />

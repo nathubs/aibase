@@ -5,7 +5,7 @@ const API_KEY = 'ak-0MvOsS1KdDKbyYax';
 const API_SECREKEY = 'sk-styOKHZsQcwb5ByfRovrlCTbIfign7zR';
 
 function base64UrlEncode(str: string) {
-  let encodedSource = CryptoJS.enc.Base64.stringify(str as any);
+  let encodedSource = CryptoJS.enc.Base64.stringify(str as unknown as CryptoJS.lib.WordArray);
   const reg = new RegExp('/', 'g');
   encodedSource = encodedSource.replace(/=+$/, '').replace(/\+/g, '-').replace(reg, '_');
   return encodedSource;
@@ -33,7 +33,7 @@ llmService.interceptors.response.use(
 );
 
 export const getApps = () => {
-  return llmService.get<any, {
+  return llmService.get<unknown, {
     data: ChatAPP[]
   }>('/v1/apps', {
     params: {
