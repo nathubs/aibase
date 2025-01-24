@@ -1,4 +1,4 @@
-import { useState, useEffect, FC, useMemo, act } from "react";
+import { useState, useEffect, FC, useMemo } from "react";
 import styles from "./index.module.less";
 import logoImg from "@/assets/images/home/logo.png";
 import { menuData } from "./config";

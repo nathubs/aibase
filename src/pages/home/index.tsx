@@ -36,6 +36,7 @@ export default function IndexPage() {
       setLlmApps(usedApps);
     }, () => {
       message.error("服务超时，请刷新重试！");
+      setLlmApps([]);
     });
   }, []);
 
