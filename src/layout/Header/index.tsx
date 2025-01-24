@@ -88,9 +88,6 @@ const HeaderLayout: FC = () => {
             开放能力
             <div className={styles.openTech}>
               <div className={styles.left}>
-                <div className={styles.tit1}>
-                  技术能力<span className={styles.arrow}>&gt;</span>
-                </div>
                 {menuData.map((item: any, index: number) => {
                   return (
                     <div
@@ -108,12 +105,24 @@ const HeaderLayout: FC = () => {
                 })}
               </div>
               <div className={styles.right}>
-                {menuData[firstIndex].category.map((cate: any) => {
+                {menuData[firstIndex]?.category.map((cate: any) => {
                   return (
-                    <div className={styles.item} key={cate.name}>
+                    <div
+                      className={styles.item}
+                      key={cate.name}
+                      onClick={() => {
+                        if (cate.category.length === 0 && cate.type) {
+                          router.navigate(
+                            cate.path ?? `/open/intro/${cate.type}`
+                          );
+                        }
+                      }}
+                    >
                       <div className={styles.itemTit}>
                         {cate.name}
-                        <span className={styles.arrow}>&gt;</span>
+                        {cate.category.length === 0 && (
+                          <span className={styles.arrow}>&gt;</span>
+                        )}
                       </div>
                       {cate.category.map((thirdCate: any) => {
                         return (
