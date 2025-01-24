@@ -26,10 +26,16 @@ const HeaderLayout: FC = () => {
     const matches = pathname.split("/").filter((item) => item);
     const ret = matches?.[matches.length - 1];
     const curIndex = menuData.findIndex((item) =>
-      item.category.some((v: any) =>
-        v.category.some((n: any) => n.type === ret || n.path?.includes(ret))
-      )
+      item.category.some((v: any) => {
+        if (v.type === ret) {
+          return true;
+        }
+        return v.category.some(
+          (n: any) => n.type === ret || n.path?.includes(ret)
+        );
+      })
     );
+    console.log(curIndex, "xxx");
     if (curIndex !== firstIndex) {
       setFirstIndex(curIndex);
     }
