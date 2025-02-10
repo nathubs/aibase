@@ -20,6 +20,9 @@ import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import rehypeRaw from "rehype-raw";
 import remarkBreaks from "remark-breaks";
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 
 const getApiUrl = (mode?: ChatBotMode) => {
     switch (mode) {
@@ -145,10 +148,13 @@ const CommonPage = () => {
                 content={
                     message.sender === "bot" ? (
                         <Markdown
-                            remarkPlugins={[remarkGfm, remarkBreaks]}
-                            rehypePlugins={[rehypeHighlight, rehypeRaw]}
+                            remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}
+                            rehypePlugins={[rehypeHighlight, rehypeRaw, rehypeKatex]}
                         >
-                            {message.content}
+                            {message.content.replace(/\\\(/g, '$')
+                                .replace(/\\\)/g, '$')
+                                .replace(/\\\[/g, '$$')
+                                .replace(/\\\]/g, '$$')}
                         </Markdown>
                     ) : (
                         message.content
