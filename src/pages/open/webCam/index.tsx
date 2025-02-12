@@ -1,4 +1,4 @@
-import { Button, Tabs } from "antd";
+import { Button, Tabs, Upload, UploadFile } from "antd";
 import "./demo.less";
 import { imgFile } from "./defaultImg";
 import { useState, useEffect, useRef } from "react";
@@ -14,6 +14,8 @@ import { getImageUrlToBase64 } from "../faceCheck/draw-face";
 import Banner from "../component/banner";
 import ApplyList from "../component/applyList";
 import Special from "../component/special";
+import { beforeUploadImg } from "../utils";
+import { UploadOutlined } from "@ant-design/icons";
 let gestureRecognizer: any;
 
 export default function WebCam() {
@@ -28,12 +30,11 @@ export default function WebCam() {
     setData({});
   };
 
-  const uploadFile = (e: any) => {
+  const uploadFile = ({ file }: { file: UploadFile }) => {
     setSelectIndex(null);
-    const file = e.target.files[0] || e.dataTransfer.files[0];
     let reader = new FileReader();
 
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file.originFileObj as Blob);
     reader.onload = () => {
       drawImg((reader as any).result);
     };
@@ -194,14 +195,16 @@ export default function WebCam() {
                     建议使用清晰的、算式规整、文字与空白占比较大的照片，效果更好{" "}
                   </p>
                 </div>
-                <Button type="primary" className="upload">
-                  本地上传
-                  <input
-                    type="file"
-                    onChange={uploadFile}
-                    accept=".jpg,png,.jpeg,.bmp"
-                  />
-                </Button>
+                <Upload
+                  onChange={uploadFile}
+                  showUploadList={false}
+                  beforeUpload={beforeUploadImg}
+                  accept=".jpg, .png, .jpeg, .bmp"
+                >
+                  <Button type="primary" icon={<UploadOutlined />}>
+                    上传图片
+                  </Button>
+                </Upload>
               </div>
               <div className="imgs-wrapper">
                 {imgFile.map((item: any, index: number) => {

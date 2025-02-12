@@ -1,5 +1,5 @@
 import "./demo.less";
-import { Button, message } from "antd";
+import { Button, Upload, UploadFile } from "antd";
 import { drawSquare, getImageUrlToBase64 } from "./draw-face";
 import { imgFile } from "./default-img";
 import { useState, useEffect } from "react";
@@ -8,6 +8,8 @@ import httpService from "@/service/httpService";
 import Banner from "../component/banner";
 import ApplyList from "../component/applyList";
 import Special from "../component/special";
+import { beforeUploadImg } from "../utils";
+import { UploadOutlined } from "@ant-design/icons";
 
 export default function FaceCheck() {
   const [selectIndex, setSelectIndex] = useState<any>(1);
@@ -17,18 +19,13 @@ export default function FaceCheck() {
   let painScale = 1;
   let rectSize: any = [];
 
-  const uploadFile = (e: any) => {
-    const file = e.target.files[0] || e.dataTransfer.files[0];
-    if (file.size > 1024 * 1024 * 10) {
-      message.error("图片大小不能超过10M");
-      return;
-    }
+  const uploadFile = ({ file }: { file: UploadFile }) => {
     setSelectIndex(null);
     let reader = new FileReader();
 
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file.originFileObj as Blob);
     reader.onload = () => {
-      drawImg((reader as any).result, file);
+      drawImg((reader as any).result, file.originFileObj);
     };
   };
 
@@ -121,14 +118,16 @@ export default function FaceCheck() {
                     建议使用清晰的、算式规整、文字与空白占比较大的照片，效果更好{" "}
                   </p>
                 </div>
-                <Button type="primary" className="upload">
-                  本地上传
-                  <input
-                    type="file"
-                    onChange={uploadFile}
-                    accept=".jpg,.png,.jpeg,.bmp"
-                  />
-                </Button>
+                <Upload
+                  onChange={uploadFile}
+                  showUploadList={false}
+                  beforeUpload={beforeUploadImg}
+                  accept=".jpg, .png, .jpeg, .bmp"
+                >
+                  <Button type="primary" icon={<UploadOutlined />}>
+                    上传图片
+                  </Button>
+                </Upload>
               </div>
               <div className="imgs-wrapper">
                 {imgFile.map((item: any, index: number) => {

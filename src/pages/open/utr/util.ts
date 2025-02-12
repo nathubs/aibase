@@ -47,7 +47,7 @@ const drawImg = (img: HTMLImageElement) => {
   };
 };
 
-export const beforeUploadImg = async (file: Blob) => {
+export const beforeUploadImage = async (file: Blob) => {
   const dataUrl = await readFile(file);
   const img = await loadImg(dataUrl);
   return drawImg(img);

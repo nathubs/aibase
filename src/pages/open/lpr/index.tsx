@@ -1,5 +1,5 @@
 import "./demo.less";
-import { Button } from "antd";
+import { Button, Upload, UploadFile } from "antd";
 import { imgFile } from "./defaultCarImg";
 import { useState, useEffect } from "react";
 import ReactJson from "react-json-view";
@@ -8,28 +8,30 @@ import { drawLpr, getImageUrlToBase64 } from "../faceCheck/draw-face";
 import Banner from "../component/banner";
 import ApplyList from "../component/applyList";
 import Special from "../component/special";
+import { UploadOutlined } from "@ant-design/icons";
+import { beforeUploadImg } from "../utils";
 
 export default function Lpr() {
   const [selectIndex, setSelectIndex] = useState<any>(1);
-  const [imgType, setImgType] = useState<string>("wide");
   const [faceJson, setFaceJson] = useState<any>({});
   let scale = 0.5859375;
   let scaleY = 0.5859375;
   let painScale = 1;
   let rectSize: any = [];
 
-  const uploadFile = (e: any) => {
-    setSelectIndex(null);
-    const file = e.target.files[0] || e.dataTransfer.files[0];
-    let reader = new FileReader();
+  const uploadFile = ({ file }: { file: UploadFile }) => {
+    if (file.status) {
+      setSelectIndex(null);
+      let reader = new FileReader();
 
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      drawImg((reader as any).result, file);
-    };
+      reader.readAsDataURL(file.originFileObj as Blob);
+      reader.onload = () => {
+        drawImg((reader as any).result, file.originFileObj as File);
+      };
+    }
   };
 
-  const customUpload = (file: File) => {
+  const customUpload = (file: File, imgType: string) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("bCut", true as any);
@@ -38,6 +40,7 @@ export default function Lpr() {
       .then((res: any) => {
         if (res.data.code === 0) {
           setFaceJson(res.data);
+          console.log(imgType, "imgType");
           drawLpr(
             res.data.data.plate_list,
             rectSize,
@@ -56,6 +59,7 @@ export default function Lpr() {
 
     var img = new Image(); //img 可以 new 也可以来源于我们页面的img标签
     img.src = url; // 设置图片源地址
+    let imgType = "wide";
 
     img.onload = function () {
       let imgWigth = (canvas as any).width;
@@ -70,9 +74,10 @@ export default function Lpr() {
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, (canvas as any).width, (canvas as any).height);
       // 图片自适应高度缩放的宽高比
+      console.log(img.width, img.height, "what");
       if (img.width > img.height) {
         // 宽>高 横图，应设宽长为canvas宽度，高度适应
-        setImgType("wide");
+        imgType = "wide";
         let painHeight = (imgWigth * img.height) / img.width;
         // 图片自适应高度缩放的宽高比
 
@@ -85,7 +90,7 @@ export default function Lpr() {
         ctx.drawImage(img, rectSize[0], rectSize[1], imgWigth, painHeight);
       } else {
         // 宽>高 长图，应设高度为canvas高度，宽长适应
-        setImgType("long");
+        imgType = "long";
         let painWidth = (img.width / img.height) * imgHeight;
         painScale = painWidth / (canvas as any).width;
         // 绘制图片
@@ -96,11 +101,11 @@ export default function Lpr() {
         ];
         ctx.drawImage(img, rectSize[0], rectSize[1], painWidth, imgHeight);
       }
+      // 如果是上传文件，需要走接口取数据
+      if (file) {
+        customUpload(file, imgType);
+      }
     };
-    // 如果是上传文件，需要走接口取数据
-    if (file) {
-      customUpload(file);
-    }
   };
   const selectImg = (index: number) => {
     setSelectIndex(index);
@@ -142,14 +147,16 @@ export default function Lpr() {
                     建议使用清晰的、算式规整、文字与空白占比较大的照片，效果更好{" "}
                   </p>
                 </div>
-                <Button type="primary" className="upload">
-                  本地上传
-                  <input
-                    type="file"
-                    onChange={uploadFile}
-                    accept=".jpg,png,.jpeg,.bmp"
-                  />
-                </Button>
+                <Upload
+                  onChange={uploadFile}
+                  showUploadList={false}
+                  beforeUpload={beforeUploadImg}
+                  accept=".jpg, .png, .jpeg, .bmp"
+                >
+                  <Button type="primary" icon={<UploadOutlined />}>
+                    上传图片
+                  </Button>
+                </Upload>
               </div>
               <div className="imgs-wrapper">
                 {imgFile.map((item: any, index: number) => {

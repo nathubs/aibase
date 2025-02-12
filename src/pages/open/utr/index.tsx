@@ -9,13 +9,14 @@ import { useState } from "react";
 import httpService from "@/service/httpService";
 import { API } from "@/service/api";
 import { drawTextSquare } from "../faceCheck/draw-face";
-import { beforeUploadImg } from "./util";
+import { beforeUploadImage } from "./util";
+import { beforeUploadImg } from "../utils";
 
 const UTR = () => {
   const [json, setJson] = useState({});
   const [textList, setTextList] = useState<string[]>([]);
   const onChange = async ({ file }: { file: UploadFile }) => {
-    const result = await beforeUploadImg(file.originFileObj as Blob);
+    const result = await beforeUploadImage(file.originFileObj as Blob);
 
     const formData = new FormData();
     formData.append("image", file.originFileObj as Blob);
@@ -50,7 +51,12 @@ const UTR = () => {
         <h2 className="common-module-tit">功能体验</h2>
         <main className={styles.demo}>
           <div className={styles.left}>
-            <Upload onChange={onChange} showUploadList={false}>
+            <Upload
+              onChange={onChange}
+              showUploadList={false}
+              beforeUpload={beforeUploadImg}
+              accept=".jpg, .png, .jpeg, .bmp"
+            >
               <Button type="primary" icon={<UploadOutlined />}>
                 上传图片
               </Button>

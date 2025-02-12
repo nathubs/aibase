@@ -3,13 +3,14 @@ import ApplyList from "../component/applyList";
 import Banner from "../component/banner";
 import Special from "../component/special";
 import styles from "./index.module.less";
-import { Button, Select, Slider } from "antd";
+import { Button, Select, Slider, Upload, UploadFile, message } from "antd";
 import { useMount, useUnmount } from "ahooks";
 import { CanvasDraw } from "./canvas-draw";
 import { CSSProperties, useRef, useState } from "react";
 import { base64ToFile } from "../faceCheck/draw-face";
 import httpService from "@/service/httpService";
 import { API } from "@/service/api";
+import { beforeUploadImg } from "../utils";
 
 const options = [
   {
@@ -26,12 +27,20 @@ const options = [
   },
 ];
 
+const WIDTH = 618;
+
 const Draw = () => {
-  const constant = useRef<{ instance?: CanvasDraw }>();
+  const constant = useRef<{
+    instance?: CanvasDraw;
+    imageIns?: {
+      canvas: HTMLCanvasElement;
+      ctx: CanvasRenderingContext2D;
+      drew?: boolean;
+    };
+  }>();
   const [type, setType] = useState("pen");
   const [imgStyle, setImgStyle] = useState("spring");
   const [imgValue, setImgValue] = useState(1);
-  const [generatedImg, setGeneratedImg] = useState("");
 
   const onChangeLineWidth = (value: number) => {
     constant.current?.instance?.changeLineWidth(value);
@@ -39,8 +48,15 @@ const Draw = () => {
   };
 
   useMount(() => {
+    const imgCanvas = document.getElementById("imgCanvas") as HTMLCanvasElement;
+    imgCanvas.width = WIDTH;
+    imgCanvas.height = WIDTH;
     constant.current = {
       instance: new CanvasDraw(),
+      imageIns: {
+        canvas: imgCanvas,
+        ctx: imgCanvas.getContext("2d")!,
+      },
     };
   });
 
@@ -77,13 +93,46 @@ const Draw = () => {
       .then((res: any) => {
         if (res.data.code === 0) {
           const { data } = res.data;
+          const img = new Image();
+          img.src = data.image;
+          img.crossOrigin = "Anonymous";
 
-          setGeneratedImg(data.image);
+          img.onload = () => {
+            constant.current!.imageIns!.ctx?.drawImage(img, 0, 0, WIDTH, WIDTH);
+            constant.current!.imageIns!.drew = true;
+          };
         }
       })
       .catch((err: any) => {
         console.log(err);
       });
+  };
+
+  const uploadFile = (e: { file: UploadFile }) => {
+    const file = e.file.originFileObj as Blob;
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      var img = new Image();
+      img.src = reader.result as string;
+      img.onload = function () {
+        constant.current?.instance?.ctx?.drawImage(img, 0, 0, 638, 638);
+      };
+    };
+  };
+
+  const exportImg = () => {
+    const imageIns = constant.current!.imageIns!;
+    if (!imageIns!.drew) {
+      message.error("请先生成预览图");
+      return;
+    }
+
+    let link = document.createElement("a");
+
+    link.href = imageIns.canvas.toDataURL("image/png");
+    link.download = `draw-${new Date().getTime()}.png`;
+    link.click();
   };
 
   return (
@@ -97,16 +146,25 @@ const Draw = () => {
         <main className={styles.main}>
           <div className={styles.left}>
             <div className={styles.tools}>
-              <Button type="primary" icon={<UploadOutlined />}>
-                本地上传
-              </Button>
+              <Upload
+                onChange={uploadFile}
+                showUploadList={false}
+                beforeUpload={beforeUploadImg}
+                accept=".jpg, .png, .jpeg, .bmp"
+              >
+                <Button type="primary" icon={<UploadOutlined />}>
+                  上传图片
+                </Button>
+              </Upload>
               <Button
                 type="default"
                 onClick={() => constant.current?.instance?.clear()}
               >
                 清空
               </Button>
-              <Button type="default">导出</Button>
+              <Button type="default" onClick={() => exportImg()}>
+                导出
+              </Button>
               <Button type="default" onClick={() => changeType()}>
                 {type === "pen" ? "橡皮擦" : "画笔"}
               </Button>
@@ -136,7 +194,7 @@ const Draw = () => {
               <Button onClick={drawPicture}>生成预览图</Button>
             </div>
             <div className={styles.img}>
-              <img src={generatedImg} />
+              <canvas id="imgCanvas" />
             </div>
           </div>
         </main>
