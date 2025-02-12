@@ -45,6 +45,7 @@ const initialValues = {
 const TTS = () => {
   const [form] = Form.useForm();
   const [text, setText] = useState("");
+  const [wavUrl, setWavUrl] = useState("");
 
   const handlePlay = async () => {
     if (!text?.trim()) {
@@ -72,9 +73,32 @@ const TTS = () => {
     if (res?.data?.data?.audio) {
       const textAudio = document.createElement("audio");
       textAudio.src = res?.data?.data?.audio;
+      setWavUrl(textAudio.src);
       console.log("data.audio===", textAudio.src);
       textAudio.play();
     }
+  };
+
+  const save = () => {
+    if (!wavUrl) {
+      message.error("请先播放音频");
+    }
+    fetch(wavUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `audio-${new Date().getTime()}.wav`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url); // 释放 Object URL
+      })
+      .catch((error) => {
+        console.error("Error downloading WAV file:", error);
+      });
   };
 
   return (
@@ -133,7 +157,7 @@ const TTS = () => {
               <img src={play} width={65} height={65} />
               点击按钮即可试听配音哦~
             </div>
-            <div className={styles.download}>
+            <div className={styles.download} onClick={save}>
               <img src={download} width={50} height={50} /> 保存音频
             </div>
           </div>
