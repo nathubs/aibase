@@ -10,7 +10,7 @@ import { CSSProperties, useRef, useState } from "react";
 import { base64ToFile } from "../faceCheck/draw-face";
 import httpService from "@/service/httpService";
 import { API } from "@/service/api";
-import { beforeUploadImg } from "../utils";
+import { beforeUploadImg, getAdaptSize } from "../utils";
 
 const options = [
   {
@@ -27,7 +27,7 @@ const options = [
   },
 ];
 
-const WIDTH = 618;
+const WIDTH = 638;
 
 const Draw = () => {
   const constant = useRef<{
@@ -116,7 +116,19 @@ const Draw = () => {
       var img = new Image();
       img.src = reader.result as string;
       img.onload = function () {
-        constant.current?.instance?.ctx?.drawImage(img, 0, 0, 638, 638);
+        const [width, height] = getAdaptSize({
+          img,
+          containerW: WIDTH,
+          containerH: WIDTH,
+        });
+        constant.current?.instance?.ctx.clearRect(0, 0, WIDTH, WIDTH);
+        constant.current?.instance?.ctx?.drawImage(
+          img,
+          (WIDTH - width) / 2,
+          (WIDTH - height) / 2,
+          width,
+          height
+        );
       };
     };
   };

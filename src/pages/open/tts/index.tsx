@@ -104,7 +104,10 @@ const TTS = () => {
 
   return (
     <div className="layout">
-      <Banner type="tts" />
+      <Banner
+        type="tts"
+        demoMove={() => document.getElementById("demo")?.scrollIntoView()}
+      />
       <div id="demo" className={styles.demo}>
         <h2 className="common-module-tit">功能体验</h2>
         <main>
