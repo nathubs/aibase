@@ -14,6 +14,7 @@ export class VideoGesture {
   videoDom: any;
   lastVideoTime = 0;
   setJSON: React.Dispatch<ShowJson>;
+  stream?: MediaStream;
   constructor(videoDom: HTMLVideoElement, setJSON: React.Dispatch<ShowJson>) {
     this.videoDom = videoDom;
     this.setJSON = setJSON;
@@ -34,7 +35,6 @@ export class VideoGesture {
           runningMode: "VIDEO",
         }
       );
-      console.log(this._hasGetUserMedia, "this._hasGetUserMedia");
       await this.checkMedia();
       await this.getVideoList();
     }
@@ -45,6 +45,7 @@ export class VideoGesture {
     this.videoDevicesList = devicesList.filter(
       (item) => item.kind === "videoinput" && item.deviceId
     );
+    console.log(devicesList, "devicesList");
     if (this.videoDevicesList.length) {
       this.videoId = this.videoDevicesList[0].deviceId;
     }
@@ -56,12 +57,11 @@ export class VideoGesture {
 
   async checkMedia(): Promise<boolean> {
     try {
-      await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
       console.log("已点击允许,开启成功");
       return true;
     } catch (error) {
       console.error("错误：", error);
-      // alert('请前往授权打开摄像头，否则将无法使用该功能！');
       throw new Error("请前往授权打开摄像头，否则将无法使用该功能！");
     }
   }
@@ -81,8 +81,8 @@ export class VideoGesture {
       },
     };
 
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    if (stream) {
+    this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+    if (this.stream) {
       if (window.stream) {
         //先关闭之前已经打开的设备
         window.stream.getTracks().forEach((track) => {
@@ -92,15 +92,14 @@ export class VideoGesture {
         });
       }
       try {
-        window.stream = stream;
-        this.videoDom.srcObject = stream;
-        this.videoDom.addEventListener(
-          "loadeddata",
-          this.predictWebcam.bind(this)
-        );
+        window.stream = this.stream;
+        this.videoDom.srcObject = this.stream;
+        this.videoDom.addEventListener("loadeddata", () => {
+          this.predictWebcam.bind(this)();
+        });
       } catch (error) {
         this.videoDom.src = window.URL.createObjectURL(
-          stream as unknown as any
+          this.stream as unknown as any
         ); //老的播放方式
       }
       this.videoDom.onloadedmetadata = () => {
@@ -113,7 +112,7 @@ export class VideoGesture {
   }
 
   async predictWebcam() {
-    const video = this.videoDom;
+    const video = document.getElementById("webcam") as any;
     const canvasElement = document.getElementById(
       "output_canvas"
     )! as HTMLCanvasElement;
@@ -129,62 +128,71 @@ export class VideoGesture {
       );
     }
 
-    if (!results) {
-      return;
-    }
-    canvasCtx.save();
-    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-    const drawingUtils = new DrawingUtils(canvasCtx);
+    if (results) {
+      canvasCtx.save();
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+      const drawingUtils = new DrawingUtils(canvasCtx);
 
-    canvasElement.style.height = videoHeight;
-    webcamElement.style.height = videoHeight;
-    canvasElement.style.width = videoWidth;
-    webcamElement.style.width = videoWidth;
+      canvasElement.style.height = videoHeight;
+      webcamElement.style.height = videoHeight;
+      canvasElement.style.width = videoWidth;
+      webcamElement.style.width = videoWidth;
 
-    if (results?.landmarks) {
-      for (const landmarks of results.landmarks) {
-        drawingUtils.drawConnectors(
-          landmarks,
-          GestureRecognizer.HAND_CONNECTIONS,
-          {
-            color: "#00FF00",
-            lineWidth: 5,
-          }
-        );
-        drawingUtils.drawLandmarks(landmarks, {
-          color: "#FF0000",
-          lineWidth: 2,
-        });
-      }
-    }
-    canvasCtx.restore();
-    if (results.gestures.length > 0) {
-      if (results.gestures[0][0].categoryName === "left") {
-        if (results.landmarks[0][0].x > results.landmarks[0][8].x) {
-          results.gestures[0][0].categoryName = "right";
-        } else {
-          results.gestures[0][0].categoryName = "left";
+      if (results?.landmarks) {
+        for (const landmarks of results.landmarks) {
+          drawingUtils.drawConnectors(
+            landmarks,
+            GestureRecognizer.HAND_CONNECTIONS,
+            {
+              color: "#00FF00",
+              lineWidth: 5,
+            }
+          );
+          drawingUtils.drawLandmarks(landmarks, {
+            color: "#FF0000",
+            lineWidth: 2,
+          });
         }
       }
+      canvasCtx.restore();
+      if (results.gestures.length > 0) {
+        if (results.gestures[0][0].categoryName === "left") {
+          if (results.landmarks[0][0].x > results.landmarks[0][8].x) {
+            results.gestures[0][0].categoryName = "right";
+          } else {
+            results.gestures[0][0].categoryName = "left";
+          }
+        }
 
-      const categoryName = results.gestures[0][0].categoryName;
-      const categoryScore =
-        Math.floor(results.gestures[0][0].score * 100) / 100;
+        const categoryName = results.gestures[0][0].categoryName;
+        const categoryScore =
+          Math.floor(results.gestures[0][0].score * 100) / 100;
 
-      let handedness = results.handednesses[0][0].displayName;
-      if (handedness === "Right") {
-        handedness = "Left";
-      } else {
-        handedness = "Right";
+        let handedness = results.handednesses[0][0].displayName;
+        if (handedness === "Right") {
+          handedness = "Left";
+        } else {
+          handedness = "Right";
+        }
+        const json = {
+          gestureRecognizer: categoryScore > 80 ? categoryName : null,
+          confidence: categoryScore > 80 ? categoryScore + "%" : null,
+          handedness: handedness,
+        };
+        this.setJSON(json);
       }
-      const json = {
-        gestureRecognizer: categoryScore > 80 ? categoryName : null,
-        confidence: categoryScore > 80 ? categoryScore + "%" : null,
-        handedness: handedness,
-      };
-      this.setJSON(json);
     }
+
     window.requestAnimationFrame(this.predictWebcam.bind(this));
+  }
+
+  stopCamera() {
+    if (this.stream) {
+      this.stream.getTracks().forEach((track) => {
+        track.stop();
+      });
+      this.videoDom.srcObject = null;
+    }
   }
 }
 

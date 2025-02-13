@@ -1,4 +1,4 @@
-import { useMount } from "ahooks";
+import { useUnmount } from "ahooks";
 import { useEffect, useRef, useState } from "react";
 import { ShowJson, VideoGesture } from "./VideoGesture";
 import { Button, Select } from "antd";
@@ -61,6 +61,10 @@ export const LeftVideo = ({
       setStep("running");
     }
   };
+
+  useUnmount(() => {
+    constant.current?.instance?.stopCamera();
+  });
 
   return (
     <div className="left-wrapper" style={style}>
