@@ -82,6 +82,7 @@ const TTS = () => {
   const save = () => {
     if (!wavUrl) {
       message.error("请先播放音频");
+      return;
     }
     fetch(wavUrl)
       .then((response) => response.blob())

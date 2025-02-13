@@ -20,23 +20,21 @@ export class VideoGesture {
   }
 
   async init() {
-    const vision = await FilesetResolver.forVisionTasks(
-      `https://edustorge.ubtrobot.com/edu-lib/test/mediapipe/tasks-vision/wasm`
-      // "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
-    );
-    this.videoGestureRecognizer = await GestureRecognizer.createFromOptions(
-      vision,
-      {
-        baseOptions: {
-          modelAssetPath: `https://test178.nangua203.com/important-files/gesture_recognizer.task`,
-          // `https://aiclassroom.ubtrobot.com/aiengine/resources/${recognizerModal.value}.task`,
-          delegate: "GPU",
-        },
-        runningMode: "VIDEO",
-      }
-    );
-    console.log(this._hasGetUserMedia, "this._hasGetUserMedia");
-    if (this._hasGetUserMedia) {
+    if (!this.videoGestureRecognizer) {
+      const vision = await FilesetResolver.forVisionTasks(
+        `https://edustorge.ubtrobot.com/edu-lib/test/mediapipe/tasks-vision/wasm`
+      );
+      this.videoGestureRecognizer = await GestureRecognizer.createFromOptions(
+        vision,
+        {
+          baseOptions: {
+            modelAssetPath: `https://test178.nangua203.com/important-files/gesture_recognizer.task`,
+            delegate: "GPU",
+          },
+          runningMode: "VIDEO",
+        }
+      );
+      console.log(this._hasGetUserMedia, "this._hasGetUserMedia");
       await this.checkMedia();
       await this.getVideoList();
     }
@@ -64,7 +62,7 @@ export class VideoGesture {
     } catch (error) {
       console.error("错误：", error);
       // alert('请前往授权打开摄像头，否则将无法使用该功能！');
-      return false;
+      throw new Error("请前往授权打开摄像头，否则将无法使用该功能！");
     }
   }
 

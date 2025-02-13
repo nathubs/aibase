@@ -173,6 +173,7 @@ export default function WebCam() {
           <div className="container" id="demo">
             <LeftVideo
               setJSON={setData}
+              show={type === "video"}
               style={{ display: type === "video" ? "block" : "none" }}
             />
             <div

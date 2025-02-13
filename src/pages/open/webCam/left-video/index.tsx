@@ -1,5 +1,5 @@
 import { useMount } from "ahooks";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ShowJson, VideoGesture } from "./VideoGesture";
 import { Button, Select } from "antd";
 import { Spin } from "@/components/basic";
@@ -9,9 +9,11 @@ import classNames from "classnames";
 export const LeftVideo = ({
   setJSON,
   style,
+  show,
 }: {
   setJSON: React.Dispatch<ShowJson>;
   style: React.CSSProperties;
+  show: boolean;
 }) => {
   const [videoDevicesList, setVideoDevicesList] = useState<MediaDeviceInfo[]>(
     []
@@ -20,20 +22,29 @@ export const LeftVideo = ({
   const constant = useRef<{ instance: VideoGesture }>();
   const [step, setStep] = useState("loading");
 
-  useMount(async () => {
-    const videoDom = document.getElementById("webcam") as HTMLVideoElement;
-    const videoGestureInstance = new VideoGesture(videoDom, setJSON);
-    await videoGestureInstance.init();
-    constant.current = {
-      instance: videoGestureInstance,
+  useEffect(() => {
+    const init = async () => {
+      const videoDom = document.getElementById("webcam") as HTMLVideoElement;
+      const videoGestureInstance = new VideoGesture(videoDom, setJSON);
+      try {
+        await videoGestureInstance.init();
+        constant.current = {
+          instance: videoGestureInstance,
+        };
+        const devicesList = videoGestureInstance.videoDevicesList;
+        if (devicesList?.length) {
+          setVideoDevicesList(devicesList);
+          setStep("canRun");
+          setVideoId(devicesList[0].deviceId);
+        }
+      } catch (e) {
+        setStep("empty");
+      }
     };
-    const devicesList = videoGestureInstance.videoDevicesList;
-    if (devicesList?.length) {
-      setVideoDevicesList(devicesList);
-      setStep("canRun");
-      setVideoId(devicesList[0].deviceId);
+    if (show) {
+      init();
     }
-  });
+  }, [show]);
 
   const changeCamera = () => (val: string) => {
     setVideoId(val);
@@ -64,6 +75,13 @@ export const LeftVideo = ({
           className={styles.tips}
         >
           请点击下方按钮打开摄像头
+        </h2>
+
+        <h2
+          style={{ display: step === "empty" ? "block" : "none" }}
+          className={styles.tips}
+        >
+          未检索到可用摄像头
         </h2>
 
         <div
