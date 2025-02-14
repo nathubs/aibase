@@ -36,7 +36,7 @@ const uploadZip = async (done) => {
   const versionNum = getVersionName();
   const zipSuffixName = `v${versionNum}-t${getBuildTime()}-${appEnv}`;
   const targetFilePath = `${getRepoDirName()}/${getBuildTime()}`;
-  const targetFileName = `omp-ai-platform-${zipSuffixName}`;
+  const targetFileName = `ai-paas-platform-${zipSuffixName}`;
   const webZipFile = `${targetFilePath}/${targetFileName}.zip`;
   const url = await uploadOtaPack(ZIP_WEB_PATH, repoName, {
     targetFile: webZipFile,
