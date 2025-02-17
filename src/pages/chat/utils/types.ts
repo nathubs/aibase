@@ -9,7 +9,7 @@ export const barAvatar: React.CSSProperties = {
 };
 
 
-export interface ChatMessage {
+export interface PaaSChatMessage {
     id: string;
     content: string;
     type: 'text' | 'image' | 'video' | 'audio' | 'document' | 'link' | 'file';
