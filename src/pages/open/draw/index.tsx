@@ -185,7 +185,7 @@ const Draw = () => {
               </div>
             </div>
             <canvas
-              id="myCanvas"
+              id="myDrawCanvas"
               style={
                 {
                   "--canvas-pointer": `url(/src/assets/images/open/${type}.png),default`,
