@@ -8,13 +8,14 @@ import {
     Conversation,
     UserFormInputType,
     UserFormInputCategory,
-    ChatBotMode,
+    AppMode,
+    ChatMessage
 } from "@ubt/uchat";
 import InputForm from "./components/InputForm";
 import { useSearchParams } from "react-router-dom";
 import { getAccessToken } from "@/service/llmService";
 import "./index.less";
-import { barAvatar, ChatMessage, fooAvatar } from "./utils/types";
+import { barAvatar, PaaSChatMessage, fooAvatar } from "./utils/types";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -24,22 +25,24 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 
-const getApiUrl = (mode?: ChatBotMode) => {
-    switch (mode) {
-        case "workflow":
-            return "https://llm.nangua203.com/v1/workflows/run";
-        case "completion":
-            return "https://llm.nangua203.com/v1/completion-messages";
-        default:
-            return "https://llm.nangua203.com/v1/chat-messages";
+const stringToAppMode = (str: string) => {
+    if (str === 'workflow') {
+        return AppMode.WorkFlow;
+    } else if (str === 'agent-chat') {
+        return AppMode.Agent;
+    } else if (str === 'completion') {
+        return AppMode.CompletionMessage;
+    } else {
+        return AppMode.ChatMessage;
     }
-};
+}
+
 
 const CommonPage = () => {
     const [searchParams] = useSearchParams();
     const appId = searchParams.get("id");
     const appName = searchParams.get("name");
-    const mode = searchParams.get("mode") as ChatBotMode;
+    const mode = searchParams.get("mode") as string;
     /** 当前query内容 */
     const [value, setValue] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
@@ -47,7 +50,7 @@ const CommonPage = () => {
     /** 当前对话对象 */
     const [conversation, setConversation] = useState<Conversation>();
     /** 聊天记录集合 */
-    const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+    const [chatMessages, setChatMessages] = useState<PaaSChatMessage[]>([]);
     /** 开场白 */
     const [openingStatement, setOpeningStatement] = useState<string>("");
     /** chatbot 需要的input */
@@ -106,7 +109,13 @@ const CommonPage = () => {
                 setLoading(false);
                 _loading.current = false;
             },
-            onFinish() {
+            onFinish(message: ChatMessage) {
+                if (message.error === 'aborted') {
+                    setChatMessages((prev) => {
+                        prev[prev.length - 1].content += `[用户取消]`;
+                        return prev;
+                    });
+                }
                 setLoading(false);
                 _loading.current = false;
             },
@@ -123,7 +132,7 @@ const CommonPage = () => {
         // 保存到对象中
         conversation?.setUserInputValues(inputs);
         // 如果是非chat-message类app，则直接开始
-        if ((["workflow", "completion"] as ChatBotMode[]).includes(mode)) {
+        if ((["workflow", "completion"] as string[]).includes(mode)) {
             onSend("");
         }
     };
@@ -134,7 +143,7 @@ const CommonPage = () => {
     };
 
     /** 生成对话框 */
-    const genBubble = (message: ChatMessage) => {
+    const genBubble = (message: PaaSChatMessage) => {
         const isBotMessage = message.sender === "bot";
         // 如果发送的是空，则不输出
         if (!isBotMessage && !message.content) {
@@ -173,7 +182,7 @@ const CommonPage = () => {
         const chat = new uChat({
             apiEnv: "dev",
             userId: "test",
-            apiUrl: getApiUrl(mode),
+            appMode: stringToAppMode(mode),
             requestTimeout: 20 * 1000,
             getHeader: () => {
                 return {
