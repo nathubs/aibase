@@ -8,8 +8,8 @@ WORKDIR /workspace
 # npm换源
 
 # 安装npm依赖库
-RUN npm install \
-    && npm run build
+RUN yarn \
+    && yarn build
 
-ENTRYPOINT ["npm", "run", "dev"]
+ENTRYPOINT ["yarn","dev"]
 
