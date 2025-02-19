@@ -1,5 +1,5 @@
 # FROM node:alpine3.19
-FROM node:alpine3.19
+FROM node:latest
 
 # 添加代码
 ADD . /workspace
