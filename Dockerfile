@@ -1,15 +1,25 @@
-# FROM node:alpine3.19
-FROM node:latest
+# syntax = docker/dockerfile:experimental
+FROM node:20.4.0-alpine3.17 as builder
+# ENV NODE_ENV=production
 
-# 添加代码
-ADD . /workspace
-WORKDIR /workspace
+WORKDIR /app
 
-# npm换源
+COPY ["package.json", "package-lock.json*", "./"]
 
-# 安装npm依赖库
-RUN yarn \
-    && yarn build
+RUN npm install
 
-ENTRYPOINT ["yarn","dev"]
+COPY . .
 
+RUN npm run build
+
+# RUN yarn && yarn build
+
+FROM nginx:alpine
+LABEL authors="Eden"
+
+RUN mkdir -p /usr/share/nginx/html/ui
+COPY --from=builder /app/dist /usr/share/nginx/html/ui
+
+RUN chown -R nginx:nginx /usr/share/nginx/html/ui
+
+EXPOSE 80
